@@ -1,0 +1,224 @@
+<!--
+	ESIEE OpenSource Project
+		MARTEL Andy
+		MERCANDALLI Jonathan
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <com.esieeAPE.MyGLSurfaceView
+        android:id="@+id/GLview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </com.esieeAPE.MyGLSurfaceView>
+
+    <TextView
+        android:id="@+id/about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:text="@string/authors"
+        android:textColor="#fff"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/fps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:textColor="#fff"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/left"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/forward"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/button_1"
+        android:maxHeight="48dp"
+        android:minHeight="40dp"
+        android:text="@string/cross_l" />
+
+    <Button
+        android:id="@+id/forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/back"
+        android:layout_toRightOf="@+id/left"
+        android:background="@drawable/button_1"
+        android:maxHeight="48dp"
+        android:minHeight="40dp"
+        android:text="@string/cross_f" />
+
+    <Button
+        android:id="@+id/right"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/back"
+        android:layout_alignTop="@+id/forward"
+        android:layout_toRightOf="@+id/forward"
+        android:background="@drawable/button_1"
+        android:maxHeight="48dp"
+        android:minHeight="40dp"
+        android:text="@string/cross_r" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/left"
+        android:background="@drawable/button_1"
+        android:maxHeight="48dp"
+        android:minHeight="40dp"
+        android:text="@string/cross_b" />
+
+    <RelativeLayout
+        android:id="@+id/action_button"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_above="@+id/about"
+        android:layout_alignRight="@+id/about" >
+
+        <ImageView
+            android:id="@+id/circleButton"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/ic_circle_button" />
+        
+        <ImageView
+            android:id="@+id/modeControlIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/shuttle" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/slideB"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/image_description"
+        android:src="@drawable/boutton_slide_menu" />
+
+    <RelativeLayout
+        android:id="@+id/wait_rl"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#000" >
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+
+        <RelativeLayout
+            android:id="@+id/wait_rl_anim"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <RelativeLayout
+                android:id="@+id/rl_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" >
+
+                <RelativeLayout
+                    android:id="@+id/rl_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" >
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:contentDescription="@string/image_description"
+                        android:src="@drawable/ic_launcher_w" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toRightOf="@+id/imageView"
+                        android:lines="1"
+                        android:paddingRight="10dp"
+                        android:text="@string/app_name"
+                        android:textColor="#fff"
+                        android:textSize="50sp" />
+                </RelativeLayout>
+
+                <ProgressBar
+                    android:id="@+id/wait"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/rl_logo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_center_buttom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:gravity="end" >
+
+                <TextView
+                    android:id="@+id/name_full"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/app_name_full"
+                    android:textColor="#fff" />
+
+                <TextView
+                    android:id="@+id/author_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/author_left"
+                    android:textColor="#fff" />
+
+                <TextView
+                    android:id="@+id/author_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="17dp"
+                    android:layout_marginRight="15dp"
+                    android:text="@string/author_right"
+                    android:textColor="#fff" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,10 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<!--
 	ESIEE OpenSource Project
 		MARTEL Andy
 		MERCANDALLI Jonathan
 -->
 <resources>
-    <string name="hello">Hello, OpenGL ES 2.0!</string>
-    <string name="app_name">RollingBall</string>
+
+    <string name="app_name" translate="false">APE</string>
+    <string name="app_name_full" translate="false">AndroidPhysicsEngine</string>
+    <string name="app_versionName" translatable="false">0.0.1</string>
+    <string name="authors" translate="false">Martel / Mercandalli</string>
+    <string name="author_left" translate="false">Martel</string>
+    <string name="author_right" translate="false">Mercandalli</string>
+    <string name="current_year" translatable="false">2014</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+	<string name="ok">Ok</string>    
+    <string name="image_description">Image Description</string>
+    <string name="cross_f">^</string>
+    <string name="cross_l">{</string>
+    <string name="cross_r">}</string>
+    <string name="cross_b">v</string>
+
+    <string-array name="versions_history" translatable="false">
+        <item>Since 0.0.1</item>
+        <item>Physic</item>
+        <item>Sliding Menu</item>
+        <item>Since 0.0.0</item>
+        <item>3D fragment</item>
+        <item>Objects drawing</item>
+    </string-array>    
+    
+    <string-array name="info_dispal" translatable="false">
+        <item>FPS</item>
+        <item>My Position</item>
+    </string-array>
+    
+    <string-array name="control_mode" translatable="false">
+        <item>Jump Apple</item>
+        <item>Gas Shuttle</item>
+        <item>Gas Car</item>
+    </string-array>
+
 </resources>

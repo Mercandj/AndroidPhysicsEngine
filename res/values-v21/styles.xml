@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	ESIEE OpenSource Project
+		MARTEL Andy
+		MERCANDALLI Jonathan
+-->
+<resources>
+    <style name="app_theme" parent="@android:style/Theme.Material.Light.NoActionBar"></style>
+</resources>
