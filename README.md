@@ -21,6 +21,14 @@ The main goal of this project is to create a reusable code for future creations.
 Android specific controllers will be used to interact with the world created.
 
 
+## FAQ
+
+if
+No resource found that matches the given name '@android:style/Theme.Material.Light.NoActionBar'
+then
+use API 21 and clean project
+
+
 ## DEVELOPERS
 
 * Martel Andy
