@@ -16,8 +16,8 @@ AndroidPhysicalEngine
 * Location : ESIEE Paris project
 * Date : October-December 2014
 
-Physical engine for Android using simple physics concepts as gravity, and other forces and principles (as many as we can).
-The main goal of this project is to create a reusable code for future creations. Therefore, what will be displayed mainly relies on the implentation the user is going to do (as an API).
+Physical engine for Android using simple physics concepts as gravity, and other forces and principles.
+The main goal of this project is to create a reusable code for future creations. Therefore, what will be displayed mainly relies on the implentation the user is going to do (as an API : package com.esieeAPE.implementation).
 Android specific controllers will be used to interact with the world created.
 
 
