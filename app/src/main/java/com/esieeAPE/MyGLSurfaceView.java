@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -24,74 +24,83 @@ import com.esieeAPE.objects.Car;
 /**
  * Android View use with GLFragment
  * Instantiate renderer and catch touch gesture
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListener {
 
+    //private float last_x, last_y, last_z;
+    public static float rotationCar;
     public final myRenderer mRenderer;
-
-    public MyGLSurfaceView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-        // Create an OpenGL ES 2.0 context.
-        setEGLContextClientVersion(2);
-
-        // Set the Renderer for drawing on the GLSurfaceView
-        mRenderer = new myRenderer(context, this);        
-        
-        setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
-        setRenderer(mRenderer);
-        // Render the view only when there is a change in the drawing data
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-                      
-        // super(context, attrs, defStyle);
-        // mIcon = context.getResources().getDrawable(R.drawable.icon);
-        // mIcon.setBounds(0, 0, mIcon.getIntrinsicWidth(), mIcon.getIntrinsicHeight());
-        
-        // Create our ScaleGestureDetector
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-        
-        
-        senSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-	    senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-	    senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
-	}
-    
     private float density;
-    public void setDensity(float density) {
-    	this.density = density;
-    }
-
     private float mPreviousX;
     private float mPreviousY;
     private ScaleGestureDetector mScaleDetector;
     private float mScaleFactor = 1.f;
     private int mActivePointerId = -1;
-    
+    /********
+     * SHAKE
+     **********/
+
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+    private long lastUpdate = 0;
+
+
+    public MyGLSurfaceView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        // Create an OpenGL ES 2.0 context.
+        setEGLContextClientVersion(2);
+
+        // Set the Renderer for drawing on the GLSurfaceView
+        mRenderer = new myRenderer(context, this);
+
+        setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+        setRenderer(mRenderer);
+        // Render the view only when there is a change in the drawing data
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        // super(context, attrs, defStyle);
+        // mIcon = context.getResources().getDrawable(R.drawable.icon);
+        // mIcon.setBounds(0, 0, mIcon.getIntrinsicWidth(), mIcon.getIntrinsicHeight());
+
+        // Create our ScaleGestureDetector
+        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+
+
+        senSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void setDensity(float density) {
+        this.density = density;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-    	mScaleDetector.onTouchEvent(e);
-    	float x, y;
-    	final int action = e.getAction(); 
+        mScaleDetector.onTouchEvent(e);
+        float x, y;
+        final int action = e.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
-	        case MotionEvent.ACTION_DOWN: {
-	            mPreviousX = e.getX();
-	            mPreviousY = e.getY();
-	            mActivePointerId = e.getPointerId(0);
-	            break;	
-	        }        
+            case MotionEvent.ACTION_DOWN: {
+                mPreviousX = e.getX();
+                mPreviousY = e.getY();
+                mActivePointerId = e.getPointerId(0);
+                break;
+            }
             case MotionEvent.ACTION_MOVE: {
-	                final int pointerIndex = e.findPointerIndex(mActivePointerId);
-	                x = e.getX(pointerIndex);
-	                y = e.getY(pointerIndex);
-	                float dx = x - mPreviousX;
-	                float dy = y - mPreviousY;
-	                
-	                if (!mScaleDetector.isInProgress()) {   
-	                	mRenderer.camera.setView(dx/(density*100.0f), -dy/(density*100.0f));
-	                	requestRender();
-	                }
+                final int pointerIndex = e.findPointerIndex(mActivePointerId);
+                x = e.getX(pointerIndex);
+                y = e.getY(pointerIndex);
+                float dx = x - mPreviousX;
+                float dy = y - mPreviousY;
+
+                if (!mScaleDetector.isInProgress()) {
+                    mRenderer.camera.setView(dx / (density * 100.0f), -dy / (density * 100.0f));
+                    requestRender();
+                }
                 mPreviousX = x;
                 mPreviousY = y;
                 break;
@@ -120,20 +129,46 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
         }
         return true;
     }
-    
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Sensor mySensor = sensorEvent.sensor;
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float y = sensorEvent.values[1];
+            long curTime = System.currentTimeMillis();
+
+            if ((curTime - lastUpdate) > 100) {
+                lastUpdate = curTime;
+                if (mRenderer != null)
+                    if (mRenderer.world != null)
+                        if (mRenderer.world.getEntity(World.carId) != null) {
+                            ((Car) mRenderer.world.getEntity(World.carId)).angleY += Math.sin(y / 10);
+                            ((Car) mRenderer.world.getEntity(World.carId)).updateForward();
+                            //mRenderer.world.getEntity(World.carId).rotate(rotationCar, 0, 1, 0);
+                        }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             mScaleFactor = detector.getScaleFactor();
-  
+
             Log.v("mydebugger", Float.toString(mScaleFactor));
-            if (mScaleFactor > 1) mScaleFactor = -1/mScaleFactor;
+            if (mScaleFactor > 1) mScaleFactor = -1 / mScaleFactor;
             mScaleFactor /= -4;
-            mScaleFactor *= Math.sqrt(mRenderer.camera.mEye.length())/10; 
-            
+            mScaleFactor *= Math.sqrt(mRenderer.camera.mEye.length()) / 10;
+
             //mRenderer.mEye[2] *= (1 + mScaleFactor);
             mRenderer.camera.mEye = mRenderer.camera.mEye.plus(mRenderer.camera.mForward.mult(mScaleFactor));
-            
+
             //mRenderer.mEye[0] += mRenderer.mForwarddirection[0]*mScaleFactor;
             //mRenderer.mEye[1] += mRenderer.mForwarddirection[1]*mScaleFactor;
             //mRenderer.mEye[2] += mRenderer.mForwarddirection[2]*mScaleFactor;
@@ -142,42 +177,4 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
             return true;
         }
     }
-    
-    
-    
-    
-    /******** SHAKE **********/
-	
-	private SensorManager senSensorManager;
-	private Sensor senAccelerometer;
-	
-	private long lastUpdate = 0;
-	//private float last_x, last_y, last_z;
-	public static float rotationCar;
-	
-	@Override
-	public void onSensorChanged(SensorEvent sensorEvent) {
-		Sensor mySensor = sensorEvent.sensor;
-		
-	    if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-	        float y = sensorEvent.values[1];
-	        long curTime = System.currentTimeMillis();
-	        
-	        if ((curTime - lastUpdate) > 100) {
-	            lastUpdate = curTime;	            
-	            if(mRenderer!=null)
-	            	if(mRenderer.world!=null)
-	            		if(mRenderer.world.getEntity(World.carId)!=null) {
-	            			((Car) mRenderer.world.getEntity(World.carId)).angleY += Math.sin(y/10);	            			
-	            			((Car) mRenderer.world.getEntity(World.carId)).updateForward();
-	            			//mRenderer.world.getEntity(World.carId).rotate(rotationCar, 0, 1, 0);
-	            		}
-	        }
-	    }
-	}
-
-	@Override
-	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		
-	}
 }

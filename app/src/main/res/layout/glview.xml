@@ -7,13 +7,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.esieeAPE.MyGLSurfaceView
         android:id="@+id/GLview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </com.esieeAPE.MyGLSurfaceView>
+        android:layout_height="fill_parent" />
 
     <TextView
         android:id="@+id/about"
@@ -90,7 +89,7 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_above="@+id/about"
-        android:layout_alignRight="@+id/about" >
+        android:layout_alignRight="@+id/about">
 
         <ImageView
             android:id="@+id/circleButton"
@@ -98,7 +97,7 @@
             android:layout_height="75dp"
             android:contentDescription="@string/image_description"
             android:src="@drawable/ic_circle_button" />
-        
+
         <ImageView
             android:id="@+id/modeControlIcon"
             android:layout_width="40dp"
@@ -124,7 +123,7 @@
         android:id="@+id/wait_rl"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#000" >
+        android:background="#000">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -138,20 +137,20 @@
         <RelativeLayout
             android:id="@+id/wait_rl_anim"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent">
 
             <RelativeLayout
                 android:id="@+id/rl_center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" >
+                android:layout_centerVertical="true">
 
                 <RelativeLayout
                     android:id="@+id/rl_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center" >
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/imageView"
@@ -190,7 +189,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
-                android:gravity="end" >
+                android:gravity="end">
 
                 <TextView
                     android:id="@+id/name_full"

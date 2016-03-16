@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -14,5 +14,5 @@ package com.esieeAPE.physics;
  *
  */
 public interface IPhysicsThreadContent {
-	public void execute();
+    public void execute();
 }

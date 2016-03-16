@@ -3,13 +3,12 @@
 		MARTEL Andy
 		MERCANDALLI Jonathan
 -->
-
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<android.support.v4.widget.DrawerLayout android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:fitsSystemWindows="false" >
+    android:fitsSystemWindows="false">
 
     <FrameLayout
         android:id="@+id/content_frame"
@@ -17,8 +16,7 @@
         android:layout_height="match_parent"
         android:background="#ededed"
         android:clipToPadding="false"
-        android:fitsSystemWindows="true" >        
-    </FrameLayout>
+        android:fitsSystemWindows="true" />
 
     <ListView
         android:id="@+id/left_drawer"
@@ -31,5 +29,5 @@
         android:divider="#ccc"
         android:dividerHeight="0.1dp"
         android:fitsSystemWindows="true" />
-    
+
 </android.support.v4.widget.DrawerLayout>

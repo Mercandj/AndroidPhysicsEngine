@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<?xml version="1.0" encoding="utf-8"?><!--
 	ESIEE OpenSource Project
 		MARTEL Andy
 		MERCANDALLI Jonathan
 -->
-<resources>    
-    <style name="AlertDialogCustom" parent="@android:style/Theme.Holo.Light.Dialog"> </style>    
-    <style name="app_theme" parent="@android:style/Theme.Holo.Light.NoActionBar"> </style>    
+<resources>
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Holo.Light.Dialog" />
+
+    <style name="app_theme" parent="@android:style/Theme.Holo.Light.NoActionBar" />
 </resources>

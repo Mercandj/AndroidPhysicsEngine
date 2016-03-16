@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -21,30 +21,29 @@ import com.esieeAPE.lib.lib;
  */
 public enum ENUM_Obj {
 
-	CUBE		(R.raw.obj_cube),
-	SPHERE		(R.raw.obj_sphere),
-	APPLE		(R.raw.obj_apple),
-	MONKEY		(R.raw.obj_monkey),
-	BOTTLE		(R.raw.obj_bottle),
-	HOUSE		(R.raw.obj_house),
-	SHUTTLE		(R.raw.obj_shuttle),
-	LAMP		(R.raw.obj_lamp),
-	CAR_CAMARO	(R.raw.obj_car_camaro),
-	CAR_AUDI	(R.raw.obj_car_audi),
-	;
-	
-	private int id;
-	private IndicesVertices object;
-	
-	private ENUM_Obj(int id) {
-		this.id = id;
-	}
-	
-	public IndicesVertices getIndicesVertices(Context context) {
-		if(object==null) {
-			object = lib.readMeshLocalNomalizedOpti(context, id);
-			GLFragment.progressBar.setProgress(GLFragment.progressBar.getProgress()+1);
-		}
-		return new IndicesVertices(object);
-	}
+    CUBE(R.raw.obj_cube),
+    SPHERE(R.raw.obj_sphere),
+    APPLE(R.raw.obj_apple),
+    MONKEY(R.raw.obj_monkey),
+    BOTTLE(R.raw.obj_bottle),
+    HOUSE(R.raw.obj_house),
+    SHUTTLE(R.raw.obj_shuttle),
+    LAMP(R.raw.obj_lamp),
+    CAR_CAMARO(R.raw.obj_car_camaro),
+    CAR_AUDI(R.raw.obj_car_audi),;
+
+    private int id;
+    private IndicesVertices object;
+
+    private ENUM_Obj(int id) {
+        this.id = id;
+    }
+
+    public IndicesVertices getIndicesVertices(Context context) {
+        if (object == null) {
+            object = lib.readMeshLocalNomalizedOpti(context, id);
+            GLFragment.progressBar.setProgress(GLFragment.progressBar.getProgress() + 1);
+        }
+        return new IndicesVertices(object);
+    }
 }
