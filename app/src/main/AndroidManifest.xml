@@ -9,10 +9,6 @@
     android:versionCode="1"
     android:versionName="@string/app_versionName" >
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="21" />
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />

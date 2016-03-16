@@ -70,7 +70,7 @@ public class Config {
     		// Flux interne
     		FileOutputStream output = activity.openFileOutput(file, Context.MODE_PRIVATE);
 
-    		// On écrit dans le flux interne
+    		// On ï¿½crit dans le flux interne
     		output.write((txt).getBytes());
 
     		if(output != null)
@@ -86,11 +86,11 @@ public class Config {
 	    try {
 	    	FileInputStream input = activity.openFileInput(file);
 	        int value;
-	        // On utilise un StringBuffer pour construire la chaîne au fur et à mesure
+	        // On utilise un StringBuffer pour construire la chaine au fur et a mesure
 	        StringBuffer lu = new StringBuffer();
-	        // On lit les caractères les uns après les autres
+	        // On lit les caracteres les uns apres les autres
 	        while((value = input.read()) != -1) {
-	        	// On écrit dans le fichier le caractère lu
+	        	// On ecrit dans le fichier le caractere lu
 	        	lu.append((char)value);
 	        }
 	        //Toast.makeText(PseudoActivity.this, "Bienvenue : " + lu.toString(), Toast.LENGTH_SHORT).show();
