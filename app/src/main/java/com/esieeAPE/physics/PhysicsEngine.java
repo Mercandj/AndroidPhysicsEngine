@@ -10,23 +10,23 @@ package com.esieeAPE.physics;
 import android.content.Context;
 
 import com.esieeAPE.Const;
-import com.esieeAPE.MyGLSurfaceView;
+import com.esieeAPE.OpenGLSurfaceView;
 import com.esieeAPE.lib.myVector3D;
 
 /**
  * Define the physic's thread behavior
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsEngine {
 
     public static boolean actionButton = false;
     final Context context;
     public PhysicsThread thread;
-    MyGLSurfaceView mGLView;
+    OpenGLSurfaceView mGLView;
     IPhysicsThreadContent threadContent;
 
-    public PhysicsEngine(final Context context, final MyGLSurfaceView mGLView) {
+    public PhysicsEngine(final Context context, final OpenGLSurfaceView mGLView) {
         this.context = context;
         this.mGLView = mGLView;
 

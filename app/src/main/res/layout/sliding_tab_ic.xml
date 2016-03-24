@@ -1,19 +1,14 @@
-<!--
-	ESIEE OpenSource Project
-		MARTEL Andy
-		MERCANDALLI Jonathan
--->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="60dp">
+    android:layout_height="60dp"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="0dp"
         android:contentDescription="@string/image_description"
@@ -23,8 +18,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingLeft="20dp"
@@ -34,4 +28,4 @@
         android:textColor="#000"
         android:textSize="24sp" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -8,7 +8,7 @@
 package com.esieeAPE.lib;
 
 public interface IFunction {
-    public boolean condition();
+    boolean condition();
 
-    public void execute();
+    void execute();
 }

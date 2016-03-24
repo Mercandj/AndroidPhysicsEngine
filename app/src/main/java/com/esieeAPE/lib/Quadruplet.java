@@ -9,8 +9,8 @@ package com.esieeAPE.lib;
 
 /**
  * Simple 4 float
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class Quadruplet {
     public float x, y, z, w;

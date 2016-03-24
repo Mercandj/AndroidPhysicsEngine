@@ -11,8 +11,8 @@ import com.esieeAPE.lib.Quadruplet;
 
 /**
  * App global Constants
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class Const {
     public final static boolean DEBUG = false;

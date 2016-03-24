@@ -12,7 +12,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.esieeAPE.Const;
-import com.esieeAPE.GLFragment;
+import com.esieeAPE.OpenGLFragment;
 import com.esieeAPE.MainActivity;
 import com.esieeAPE.R;
 import com.esieeAPE.lib.IFunctionEntity;
@@ -31,8 +31,8 @@ import com.esieeAPE.physics.PhysicsEngine;
 
 /**
  * SPECIFIC world : Place and define all objects
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class World extends EntityGroup {
 
@@ -49,7 +49,7 @@ public class World extends EntityGroup {
 
         /********* INIT OBJECTS *********/
 
-        GLFragment.progressBar.setMax(ENUM_Obj.values().length);
+        OpenGLFragment.progressBar.setMax(ENUM_Obj.values().length);
 
         final Car car_camaro = new Car(context, new myVector3D(0, 0, -1));
         carId = this.entities.size();
@@ -212,7 +212,7 @@ public class World extends EntityGroup {
         this.addEntity(rwall);
 
 		/*
-		myObject3D house = new myObject3D(context);
+        myObject3D house = new myObject3D(context);
 		house.readMeshLocal(ENUM_IndicesVertices.HOUSE.getIndicesVertices(context));
 		house.scale(12);
         house.computeNormals();

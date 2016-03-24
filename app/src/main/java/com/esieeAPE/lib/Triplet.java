@@ -9,8 +9,8 @@ package com.esieeAPE.lib;
 
 /**
  * Simple triplet : you also have myVector3D witch is more specific
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class Triplet {
     public float x, y, z;

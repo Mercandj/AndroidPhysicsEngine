@@ -11,9 +11,9 @@ import com.esieeAPE.lib.myVector3D;
 import com.esieeAPE.objects.Entity;
 
 /**
- * Force Spring : Physics Force 
- * @author Jonathan
+ * Force Spring : Physics Force
  *
+ * @author Jonathan
  */
 public class ForceSpring extends Force {
 

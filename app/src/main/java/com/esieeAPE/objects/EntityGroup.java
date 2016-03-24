@@ -17,8 +17,8 @@ import java.util.List;
 
 /**
  * Use to apply transformations : all in one
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class EntityGroup extends Entity {
 

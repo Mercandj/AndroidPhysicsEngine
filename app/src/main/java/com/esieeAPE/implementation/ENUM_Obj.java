@@ -9,15 +9,15 @@ package com.esieeAPE.implementation;
 
 import android.content.Context;
 
-import com.esieeAPE.GLFragment;
+import com.esieeAPE.OpenGLFragment;
 import com.esieeAPE.R;
 import com.esieeAPE.lib.IndicesVertices;
 import com.esieeAPE.lib.lib;
 
 /**
  * Define the non trivial objects you want (maybe) use (only World.class  apply to the scene the object you use)
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public enum ENUM_Obj {
 
@@ -35,14 +35,14 @@ public enum ENUM_Obj {
     private int id;
     private IndicesVertices object;
 
-    private ENUM_Obj(int id) {
+    ENUM_Obj(int id) {
         this.id = id;
     }
 
     public IndicesVertices getIndicesVertices(Context context) {
         if (object == null) {
             object = lib.readMeshLocalNomalizedOpti(context, id);
-            GLFragment.progressBar.setProgress(GLFragment.progressBar.getProgress() + 1);
+            OpenGLFragment.progressBar.setProgress(OpenGLFragment.progressBar.getProgress() + 1);
         }
         return new IndicesVertices(object);
     }

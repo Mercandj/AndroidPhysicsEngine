@@ -48,7 +48,6 @@ void main() {
 			vec3(t.y, b.y, n.y),
 			vec3(t.z, b.z, n.z));
 		
-		
 		// Use the matrix out_m to transform light and eye directions to tangent space.		
 		lightdir = out_m * lightdir;
 		eyedir = out_m * eyedir;

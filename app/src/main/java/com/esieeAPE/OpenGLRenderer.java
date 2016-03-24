@@ -27,21 +27,21 @@ import javax.microedition.khronos.opengles.GL10;
  *
  * @author Jonathan
  */
-public class myRenderer implements GLSurfaceView.Renderer {
+public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
     public World world;
     public float mWidth, mHeight;
     public Camera camera;
     public long time, fps, tmp_time, tmp_fps; // fps measure
     Context context;
-    MyGLSurfaceView mGLView;
+    OpenGLSurfaceView mGLView;
     PhysicsEngine physicEngine;
     Handler handler = new Handler();
     private float[] mMVPMatrix = new float[16];
     private float[] mProjMatrix = new float[16];
     private float[] mVMatrix = new float[16];
 
-    public myRenderer(Context context, MyGLSurfaceView mGLView) {
+    public OpenGLRenderer(Context context, OpenGLSurfaceView mGLView) {
         this.context = context;
         this.mGLView = mGLView;
         this.camera = new Camera(context);
@@ -63,11 +63,11 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
         handler.post(new Runnable() { // Access UIThred
             public void run() {
-                GLFragment.wait_rl.setVisibility(View.GONE);
-                GLFragment.forward.setVisibility(View.VISIBLE);
-                GLFragment.back.setVisibility(View.VISIBLE);
-                GLFragment.left.setVisibility(View.VISIBLE);
-                GLFragment.right.setVisibility(View.VISIBLE);
+                OpenGLFragment.wait_rl.setVisibility(View.GONE);
+                OpenGLFragment.forward.setVisibility(View.VISIBLE);
+                OpenGLFragment.back.setVisibility(View.VISIBLE);
+                OpenGLFragment.left.setVisibility(View.VISIBLE);
+                OpenGLFragment.right.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -94,7 +94,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
                         txt_display += "pos" + camera.mEye + " \t";
                     if (MainActivity.config.isDisplayFPS())
                         txt_display += "time = " + tmp_time + "\t  fps = " + fps + " fps";
-                    GLFragment.fps.setText(txt_display);
+                    OpenGLFragment.fps.setText(txt_display);
                 }
             });
             fps = tmp_fps;

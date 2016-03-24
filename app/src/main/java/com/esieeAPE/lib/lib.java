@@ -178,7 +178,9 @@ public class lib {
             }
 
             indices = new short[inds.size()];
-            for (i = 0; i < indices.length; i++) indices[i] = inds.get(i);
+            for (i = 0; i < indices.length; i++) {
+                indices[i] = inds.get(i);
+            }
 
             vertices = new float[verts.size()];
             int n = vertices.length / 3;

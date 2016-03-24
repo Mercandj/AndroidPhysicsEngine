@@ -30,7 +30,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Main activity used with GLFragment in order to display the GLSurfaceView
+ * Main activity used with OpenGLFragment in order to display the OpenGLSurfaceView
  * Sliding Menu is used like buttons
  *
  * @author Jonathan
@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
     public static Config config;
     public static NavDrawerItemListe navDrawerItems;
     public NavDrawerItem TAB_1, TAB_2, TAB_3, TAB_4, TAB_5, TAB_6;
-    GLFragment fragment;
+    OpenGLFragment fragment;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
         mDrawerList.setAdapter(new NavDrawerListAdapter(this, navDrawerItems.getListe()));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        fragment = new GLFragment();
+        fragment = new OpenGLFragment();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 

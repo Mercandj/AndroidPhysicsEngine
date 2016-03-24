@@ -17,8 +17,8 @@ import java.util.List;
 
 /**
  * Define the object's attributes
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public abstract class Entity {
 
@@ -59,5 +59,4 @@ public abstract class Entity {
     public abstract void applyForces(EntityGroup contacts);
 
     public abstract void addForce(Force force);
-
 }

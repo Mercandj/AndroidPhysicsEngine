@@ -7,7 +7,6 @@
 
 package com.esieeAPE;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
@@ -17,10 +16,8 @@ import android.widget.TextView;
  * @author Jonathan
  */
 public class Font {
-    public static void applyFont(Activity activity, TextView tv, String police) {
-        if (activity == null)
-            return;
-        Typeface font = Typeface.createFromAsset(activity.getAssets(), police);
+    public static void applyFont(TextView tv, String police) {
+        final Typeface font = Typeface.createFromAsset(tv.getContext().getAssets(), police);
         tv.setTypeface(font);
     }
 }

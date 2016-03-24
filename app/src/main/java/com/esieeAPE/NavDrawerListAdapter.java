@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 /**
  * Sliding Menu stuff
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class NavDrawerListAdapter extends BaseAdapter {
 
@@ -59,12 +59,13 @@ public class NavDrawerListAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.sliding_tab_ic, parent, false);
 
                 ((TextView) convertView.findViewById(R.id.title)).setText(item.title);
-                Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
+                Font.applyFont(((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
 
-                if (navDrawerItems.get(position).isImage)
+                if (navDrawerItems.get(position).isImage) {
                     ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon));
-                else
-                    ((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
+                } else {
+                    convertView.findViewById(R.id.icon).setVisibility(View.GONE);
+                }
 
                 break;
 
@@ -72,10 +73,10 @@ public class NavDrawerListAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.sliding_tab, parent, false);
 
                 ((TextView) convertView.findViewById(R.id.title)).setText(item.title);
-                Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
+                Font.applyFont(((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
 
                 if (navDrawerItems.get(position).onCheckedChangeListener != null) {
-                    ((ToggleButton) convertView.findViewById(R.id.toggle)).setVisibility(View.VISIBLE);
+                    convertView.findViewById(R.id.toggle).setVisibility(View.VISIBLE);
                     ((ToggleButton) convertView.findViewById(R.id.toggle)).setChecked(item.initChecked);
                     ((ToggleButton) convertView.findViewById(R.id.toggle)).setOnCheckedChangeListener(item.onCheckedChangeListener);
                 }

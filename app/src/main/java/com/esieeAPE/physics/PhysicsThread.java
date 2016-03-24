@@ -9,8 +9,8 @@ package com.esieeAPE.physics;
 
 /**
  * Define thread behavior with time regulation
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsThread extends Thread {
 

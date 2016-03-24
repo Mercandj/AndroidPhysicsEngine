@@ -11,9 +11,9 @@ import com.esieeAPE.lib.Predicat;
 import com.esieeAPE.lib.myVector3D;
 
 /**
- * Force "ponctuelle" : Physics Force 
- * @author Jonathan
+ * Force "ponctuelle" : Physics Force
  *
+ * @author Jonathan
  */
 public class ForcePoint extends Force {
 

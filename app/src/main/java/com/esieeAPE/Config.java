@@ -135,7 +135,7 @@ public class Config {
     public void setControlMode(int value) {
         if (ENUM_Int.CONTROL_MODE.value != value) {
             ENUM_Int.CONTROL_MODE.value = value;
-            GLFragment.updateModeControlIcon(value);
+            OpenGLFragment.updateModeControlIcon(value);
             save(activity);
         }
     }

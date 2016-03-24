@@ -1,15 +1,10 @@
-<!--
-	ESIEE OpenSource Project
-		MARTEL Andy
-		MERCANDALLI Jonathan
--->
-
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <com.esieeAPE.MyGLSurfaceView
+    <com.esieeAPE.OpenGLSurfaceView
         android:id="@+id/GLview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
@@ -84,7 +79,7 @@
         android:minHeight="40dp"
         android:text="@string/cross_b" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/action_button"
         android:layout_width="75dp"
         android:layout_height="75dp"
@@ -102,12 +97,11 @@
             android:id="@+id/modeControlIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center"
             android:contentDescription="@string/image_description"
             android:src="@drawable/shuttle" />
 
-    </RelativeLayout>
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/slideB"
@@ -119,7 +113,7 @@
         android:contentDescription="@string/image_description"
         android:src="@drawable/boutton_slide_menu" />
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/wait_rl"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -128,13 +122,10 @@
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/wait_rl_anim"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
@@ -143,8 +134,7 @@
                 android:id="@+id/rl_center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true">
+                android:layout_gravity="center">
 
                 <RelativeLayout
                     android:id="@+id/rl_logo"
@@ -182,22 +172,13 @@
                     android:layout_marginTop="15dp" />
             </RelativeLayout>
 
-            <RelativeLayout
+            <FrameLayout
                 android:id="@+id/rl_center_buttom"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
                 android:gravity="end">
-
-                <TextView
-                    android:id="@+id/name_full"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/app_name_full"
-                    android:textColor="#fff" />
 
                 <TextView
                     android:id="@+id/author_left"
@@ -208,16 +189,27 @@
                     android:textColor="#fff" />
 
                 <TextView
+                    android:id="@+id/name_full"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/app_name_full"
+                    android:textColor="#fff" />
+
+                <TextView
                     android:id="@+id/author_right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right"
                     android:layout_marginBottom="17dp"
                     android:layout_marginRight="15dp"
                     android:text="@string/author_right"
                     android:textColor="#fff" />
-            </RelativeLayout>
-        </RelativeLayout>
-    </RelativeLayout>
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </FrameLayout>
 
 </RelativeLayout>

@@ -14,8 +14,8 @@ import com.esieeAPE.objects.Entity;
 /**
  * Force like gravity
  * Physics force : One direction, non specific application point (use ForcePoint if you want)
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class Force {
 

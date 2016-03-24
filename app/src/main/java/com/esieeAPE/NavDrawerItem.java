@@ -17,6 +17,7 @@ import com.esieeAPE.lib.IFunction;
  * @author Jonathan
  */
 public class NavDrawerItem {
+
     public String title;
     public int icon;
     public int SLIDING_MENU_TAB;

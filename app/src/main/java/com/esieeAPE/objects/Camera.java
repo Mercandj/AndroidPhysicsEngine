@@ -14,8 +14,8 @@ import com.esieeAPE.lib.myVector3D;
 
 /**
  * "Main" Camera used as the principal view
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class Camera {
 

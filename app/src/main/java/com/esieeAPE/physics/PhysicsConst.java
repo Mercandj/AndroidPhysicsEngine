@@ -9,8 +9,8 @@ package com.esieeAPE.physics;
 
 /**
  * Global world physic constants
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsConst {
 

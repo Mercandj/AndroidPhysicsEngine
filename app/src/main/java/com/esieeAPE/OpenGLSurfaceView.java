@@ -22,16 +22,16 @@ import com.esieeAPE.implementation.World;
 import com.esieeAPE.objects.Car;
 
 /**
- * Android View use with GLFragment
+ * Android View use with OpenGLFragment
  * Instantiate renderer and catch touch gesture
  *
  * @author Jonathan
  */
-public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListener {
+public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListener {
 
     //private float last_x, last_y, last_z;
     public static float rotationCar;
-    public final myRenderer mRenderer;
+    public final OpenGLRenderer mRenderer;
     private float density;
     private float mPreviousX;
     private float mPreviousY;
@@ -47,19 +47,19 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
     private long lastUpdate = 0;
 
 
-    public MyGLSurfaceView(Context context, AttributeSet attrs) {
+    public OpenGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         // Create an OpenGL ES 2.0 context.
         setEGLContextClientVersion(2);
 
-        // Set the Renderer for drawing on the GLSurfaceView
-        mRenderer = new myRenderer(context, this);
+        // Set the Renderer for drawing on the OpenGLSurfaceView
+        mRenderer = new OpenGLRenderer(context, this);
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         setRenderer(mRenderer);
         // Render the view only when there is a change in the drawing data
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setRenderMode(OpenGLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
         // super(context, attrs, defStyle);
         // mIcon = context.getResources().getDrawable(R.drawable.icon);
