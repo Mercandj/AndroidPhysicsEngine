@@ -71,18 +71,17 @@ public class MainActivity extends Activity {
             @Override
             public void execute() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this, R.style.AlertDialogCustom));
-                StringBuilder html = new StringBuilder();
-
-                String post_html = "By " + getString(R.string.authors) + " : <font color=\"#26AEEE\"><i>ESIEE</i></font><br/>Version : <font color=\"#26AEEE\">" + getString(R.string.app_versionName) + "</font><br/>";
+                StringBuilder html = new StringBuilder("By " + getString(R.string.authors) +
+                        " : <font color=\"#26AEEE\"><i>ESIEE</i></font><br/>Version : <font color=\"#26AEEE\">"
+                        + getString(R.string.app_versionName) + "</font><br/>");
                 String[] versions = getResources().getStringArray(R.array.versions_history);
                 for (String version : versions) {
-                    if (version.contains("Since "))
-                        post_html += "<br/><b>" + version + "</b><br/>";
-                    else
-                        post_html += "<i>� " + version + "</i><br/>";
+                    if (version.contains("Since ")) {
+                        html.append("<br/><b>").append(version).append("</b><br/>");
+                    } else {
+                        html.append("<i>• ").append(version).append("</i><br/>");
+                    }
                 }
-                html.append(post_html);
-
                 builder.setMessage(Html.fromHtml(html.toString()))
                         .setTitle(getString(R.string.app_name) + " " + getString(R.string.current_year))
                         .setCancelable(false)

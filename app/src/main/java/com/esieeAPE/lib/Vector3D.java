@@ -14,59 +14,59 @@ import java.text.DecimalFormat;
  *
  * @author Jonathan
  */
-public class myVector3D {
+public class Vector3D {
 
     public float dX;
     public float dY;
     public float dZ;
 
-    public myVector3D() {
+    public Vector3D() {
     }
 
-    public myVector3D(final myVector3D v) {
+    public Vector3D(final Vector3D v) {
         this.dX = v.dX;
         this.dY = v.dY;
         this.dZ = v.dZ;
     }
 
-    public myVector3D(float dx, float dy, float dz) {
+    public Vector3D(float dx, float dy, float dz) {
         this.dX = dx;
         this.dY = dy;
         this.dZ = dz;
     }
 
-    float dot(myVector3D v1) {
+    float dot(Vector3D v1) {
         return (v1.dX * dX + v1.dY * dY + v1.dZ * dZ);
     }
 
-    public myVector3D plus(myVector3D v1) {
-        return new myVector3D(dX + v1.dX, dY + v1.dY, dZ + v1.dZ);
+    public Vector3D plus(Vector3D v1) {
+        return new Vector3D(dX + v1.dX, dY + v1.dY, dZ + v1.dZ);
     }
 
-    public myVector3D minus() {
-        return new myVector3D(-dX, -dY, -dZ);
+    public Vector3D minus() {
+        return new Vector3D(-dX, -dY, -dZ);
     }
 
-    public myVector3D mult(float s) {
-        return new myVector3D(dX * s, dY * s, dZ * s);
+    public Vector3D mult(float s) {
+        return new Vector3D(dX * s, dY * s, dZ * s);
     }
 
-    public myVector3D mult(myVector3D s) {
-        return new myVector3D(dX * s.dX, dY * s.dY, dZ * s.dZ);
+    public Vector3D mult(Vector3D s) {
+        return new Vector3D(dX * s.dX, dY * s.dY, dZ * s.dZ);
     }
 
-    public myVector3D mult(float x, float y, float z) {
-        return new myVector3D(dX * x, dY * y, dZ * z);
+    public Vector3D mult(float x, float y, float z) {
+        return new Vector3D(dX * x, dY * y, dZ * z);
     }
 
-    void cross(myVector3D v1, myVector3D v2) {
+    void cross(Vector3D v1, Vector3D v2) {
         dX = v1.dY * v2.dZ - v1.dZ * v2.dY;
         dY = v1.dZ * v2.dX - v1.dX * v2.dZ;
         dZ = v1.dX * v2.dY - v1.dY * v2.dX;
     }
 
-    public myVector3D cross(myVector3D v1) {
-        myVector3D result = new myVector3D();
+    public Vector3D cross(Vector3D v1) {
+        Vector3D result = new Vector3D();
         result.cross(this, v1);
         return result;
     }
@@ -82,11 +82,11 @@ public class myVector3D {
         dZ = dZ / l;
     }
 
-    public void rotate(myVector3D lp, float theta) {
+    public void rotate(Vector3D lp, float theta) {
         //rotate vector this around the line defined by lp through the origin by theta degrees.
         float cos_theta = (float) Math.cos(theta);
         float dot = this.dot(lp);
-        myVector3D cross = this.cross(lp);
+        Vector3D cross = this.cross(lp);
         dX *= cos_theta;
         dY *= cos_theta;
         dZ *= cos_theta;

@@ -50,7 +50,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
     public OpenGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        // Create an OpenGL ES 2.0 context.
+        // Create an OpenGL ES 2.0 mContext.
         setEGLContextClientVersion(2);
 
         // Set the Renderer for drawing on the OpenGLSurfaceView
@@ -61,8 +61,8 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
         // Render the view only when there is a change in the drawing data
         setRenderMode(OpenGLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-        // super(context, attrs, defStyle);
-        // mIcon = context.getResources().getDrawable(R.drawable.icon);
+        // super(mContext, attrs, defStyle);
+        // mIcon = mContext.getResources().getDrawable(R.drawable.icon);
         // mIcon.setBounds(0, 0, mIcon.getIntrinsicWidth(), mIcon.getIntrinsicHeight());
 
         // Create our ScaleGestureDetector

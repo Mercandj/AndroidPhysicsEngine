@@ -19,6 +19,8 @@ varying vec4 myvertex;
 varying vec2 mytexturecoords;
 
 void main() {
+
+    // Give the varying to the shader_fragment
 	gl_Position = uMVPMatrix * vPosition;
 	mynormal = vNormal;
 	mytangent = vTangent;

@@ -15,7 +15,7 @@ import android.util.Log;
 import com.esieeAPE.R;
 import com.esieeAPE.lib.IFunctionEntity;
 import com.esieeAPE.lib.IndicesVertices;
-import com.esieeAPE.lib.myVector3D;
+import com.esieeAPE.lib.Vector3D;
 import com.esieeAPE.physics.Force;
 import com.esieeAPE.physics.PhysicsConst;
 
@@ -32,15 +32,17 @@ import java.util.Arrays;
 
 /**
  * "Real" object
- * @author Jonathan
  *
+ * @author Jonathan
  */
-public class myObject3D extends Entity {
+public class Object3D extends Entity {
+
+    private static final String TAG = "Object3D";
+
     static String vertexShaderCode;
     static String fragmentShaderCode;
-    private final String TAG = "myObject3D";
     public float[] transformationMatrix = new float[16];
-    public myTexture texture, texture_bump;
+    public Texture texture, texture_bump;
     Context context;
     IFunctionEntity contactFloorListener;
     boolean insideLastLoop = false;
@@ -60,7 +62,7 @@ public class myObject3D extends Entity {
     private int mNMatrixHandle;
     private int mMVMatrixHandle;
 
-    public myObject3D(Context context, IFunctionEntity contactFlourListener) {
+    public Object3D(Context context, IFunctionEntity contactFlourListener) {
         this.context = context;
         if (vertexShaderCode == null)
             vertexShaderCode = readShaderFromRawResource(R.raw.shader_vertex);
@@ -70,7 +72,7 @@ public class myObject3D extends Entity {
         this.contactFloorListener = contactFlourListener;
     }
 
-    public myObject3D(Context context) {
+    public Object3D(Context context) {
         this.context = context;
         if (vertexShaderCode == null)
             vertexShaderCode = readShaderFromRawResource(R.raw.shader_vertex);
@@ -79,7 +81,7 @@ public class myObject3D extends Entity {
         Matrix.setIdentityM(transformationMatrix, 0);
     }
 
-    private myVector3D computeTangent(int v0, int v1, int v2) {
+    private Vector3D computeTangent(int v0, int v1, int v2) {
         float du1 = texturecoords[2 * v1] - texturecoords[2 * v0];
         float dv1 = texturecoords[2 * v1 + 1] - texturecoords[2 * v0 + 1];
         float du2 = texturecoords[2 * v2] - texturecoords[2 * v0];
@@ -87,7 +89,7 @@ public class myObject3D extends Entity {
 
         float f = 1.0f / (du1 * dv2 - du2 * dv1);
         if ((du1 * dv2 - du2 * dv1) == 0) {
-            return new myVector3D(0, 0, 0);
+            return new Vector3D(0, 0, 0);
         }
 
         float e1x = vertices[3 * v1] - vertices[3 * v0];
@@ -98,7 +100,7 @@ public class myObject3D extends Entity {
         float e2y = vertices[3 * v2 + 1] - vertices[3 * v0 + 1];
         float e2z = vertices[3 * v2 + 2] - vertices[3 * v0 + 2];
 
-        return new myVector3D(f * (dv2 * e1x - dv1 * e2x), f * (dv2 * e1y - dv1 * e2y), f * (dv2 * e1z - dv1 * e2z));
+        return new Vector3D(f * (dv2 * e1x - dv1 * e2x), f * (dv2 * e1y - dv1 * e2y), f * (dv2 * e1z - dv1 * e2z));
     }
 
     public void computeTangents() {
@@ -114,7 +116,7 @@ public class myObject3D extends Entity {
         for (i = 0; i < n; i++) incidences[i] = 0;
 
         for (j = 0; j < m; j++) {
-            myVector3D v = computeTangent(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2]);
+            Vector3D v = computeTangent(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2]);
             x1 = v.dX;
             y1 = v.dY;
             z1 = v.dZ;
@@ -332,8 +334,8 @@ public class myObject3D extends Entity {
     public void readMeshLocal(final IndicesVertices indicesVertices) {
         this.vertices = indicesVertices.vertices;
         this.indices = indicesVertices.indices;
-        this.edgeVerticeMin = indicesVertices.edgeVerticeMin;
-        this.edgeVerticeMax = indicesVertices.edgeVerticeMax;
+        this.mEdgePositionMin = indicesVertices.edgeVerticeMin;
+        this.mEdgeVectorPositionMax = indicesVertices.edgeVerticeMax;
     }
 
     public void computeSphereTexture() {
@@ -368,8 +370,8 @@ public class myObject3D extends Entity {
         indices = new short[3 * m];
         texturecoords = new float[2 * n];
 
-        this.edgeVerticeMin = new myVector3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-        this.edgeVerticeMax = new myVector3D(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+        this.mEdgePositionMin = new Vector3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+        this.mEdgeVectorPositionMax = new Vector3D(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
 
         k = 0;
         for (i = 0; i <= num; i++) {
@@ -378,20 +380,20 @@ public class myObject3D extends Entity {
                 vertices[3 * ((num + 1) * i + j) + 1] = (float) s * j / (float) num - s / 2;
                 vertices[3 * ((num + 1) * i + j) + 2] = (float) 0.0;
 
-                if (vertices[3 * ((num + 1) * i + j)] < edgeVerticeMin.dX)
-                    edgeVerticeMin.dX = vertices[3 * ((num + 1) * i + j)];
-                else if (vertices[3 * ((num + 1) * i + j)] > edgeVerticeMin.dX)
-                    edgeVerticeMax.dX = vertices[3 * ((num + 1) * i + j)];
+                if (vertices[3 * ((num + 1) * i + j)] < mEdgePositionMin.dX)
+                    mEdgePositionMin.dX = vertices[3 * ((num + 1) * i + j)];
+                else if (vertices[3 * ((num + 1) * i + j)] > mEdgePositionMin.dX)
+                    mEdgeVectorPositionMax.dX = vertices[3 * ((num + 1) * i + j)];
 
-                if (vertices[3 * ((num + 1) * i + j) + 1] < edgeVerticeMin.dY)
-                    edgeVerticeMin.dY = vertices[3 * ((num + 1) * i + j) + 1];
-                else if (vertices[3 * ((num + 1) * i + j) + 1] > edgeVerticeMin.dY)
-                    edgeVerticeMax.dY = vertices[3 * ((num + 1) * i + j) + 1];
+                if (vertices[3 * ((num + 1) * i + j) + 1] < mEdgePositionMin.dY)
+                    mEdgePositionMin.dY = vertices[3 * ((num + 1) * i + j) + 1];
+                else if (vertices[3 * ((num + 1) * i + j) + 1] > mEdgePositionMin.dY)
+                    mEdgeVectorPositionMax.dY = vertices[3 * ((num + 1) * i + j) + 1];
 
-                if (vertices[3 * ((num + 1) * i + j) + 2] < edgeVerticeMin.dZ)
-                    edgeVerticeMin.dZ = vertices[3 * ((num + 1) * i + j) + 2];
-                else if (vertices[3 * ((num + 1) * i + j) + 2] > edgeVerticeMin.dZ)
-                    edgeVerticeMax.dZ = vertices[3 * ((num + 1) * i + j) + 2];
+                if (vertices[3 * ((num + 1) * i + j) + 2] < mEdgePositionMin.dZ)
+                    mEdgePositionMin.dZ = vertices[3 * ((num + 1) * i + j) + 2];
+                else if (vertices[3 * ((num + 1) * i + j) + 2] > mEdgePositionMin.dZ)
+                    mEdgeVectorPositionMax.dZ = vertices[3 * ((num + 1) * i + j) + 2];
 
                 texturecoords[2 * ((num + 1) * i + j)] = (float) i / (float) (num + 1);
                 texturecoords[2 * ((num + 1) * i + j) + 1] = (float) j / (float) (num + 1);
@@ -469,9 +471,9 @@ public class myObject3D extends Entity {
 
     @Override
     public void translate(final float x, final float y, final float z) {
-        this.position.dX += x;
-        this.position.dY += y;
-        this.position.dZ += z;
+        this.mPosition.dX += x;
+        this.mPosition.dY += y;
+        this.mPosition.dZ += z;
 
         float[] tmp = new float[16];
         Matrix.setIdentityM(tmp, 0);
@@ -494,131 +496,143 @@ public class myObject3D extends Entity {
         //Matrix.rotateM(transformationMatrix, 0, a, x, y, z);
 
         if (a == -90 && x == 1 && y == 0 && z == 0) {
-            float tmpMin = -this.edgeVerticeMin.dY;
-            float tmpMax = -this.edgeVerticeMax.dY;
-            this.edgeVerticeMin.dY = this.edgeVerticeMin.dZ;
-            this.edgeVerticeMax.dY = this.edgeVerticeMax.dZ;
-            this.edgeVerticeMin.dZ = tmpMin;
-            this.edgeVerticeMax.dZ = tmpMax;
+            float tmpMin = -this.mEdgePositionMin.dY;
+            float tmpMax = -this.mEdgeVectorPositionMax.dY;
+            this.mEdgePositionMin.dY = this.mEdgePositionMin.dZ;
+            this.mEdgeVectorPositionMax.dY = this.mEdgeVectorPositionMax.dZ;
+            this.mEdgePositionMin.dZ = tmpMin;
+            this.mEdgeVectorPositionMax.dZ = tmpMax;
         }
     }
 
     @Override
     public void scale(float rate) {
-        for (int i = 0; i < vertices.length; i++)
+        for (int i = 0; i < vertices.length; i++) {
             vertices[i] *= rate;
+        }
 
-        this.edgeVerticeMin.dX = (this.edgeVerticeMin.dX - (this.edgeVerticeMax.dX + this.edgeVerticeMin.dX) / 2) * rate;
-        this.edgeVerticeMin.dY = (this.edgeVerticeMin.dY - (this.edgeVerticeMax.dY + this.edgeVerticeMin.dY) / 2) * rate;
-        this.edgeVerticeMin.dZ = (this.edgeVerticeMin.dZ - (this.edgeVerticeMax.dZ + this.edgeVerticeMin.dZ) / 2) * rate;
+        mEdgePositionMin.dX = (mEdgePositionMin.dX - (mEdgeVectorPositionMax.dX + mEdgePositionMin.dX) / 2) * rate;
+        mEdgePositionMin.dY = (mEdgePositionMin.dY - (mEdgeVectorPositionMax.dY + mEdgePositionMin.dY) / 2) * rate;
+        mEdgePositionMin.dZ = (mEdgePositionMin.dZ - (mEdgeVectorPositionMax.dZ + mEdgePositionMin.dZ) / 2) * rate;
 
-        this.edgeVerticeMax.dX = (this.edgeVerticeMax.dX - (this.edgeVerticeMax.dX + this.edgeVerticeMin.dX) / 2) * rate;
-        this.edgeVerticeMax.dY = (this.edgeVerticeMax.dY - (this.edgeVerticeMax.dY + this.edgeVerticeMin.dY) / 2) * rate;
-        this.edgeVerticeMax.dZ = (this.edgeVerticeMax.dZ - (this.edgeVerticeMax.dZ + this.edgeVerticeMin.dZ) / 2) * rate;
+        mEdgeVectorPositionMax.dX = (mEdgeVectorPositionMax.dX - (mEdgeVectorPositionMax.dX + mEdgePositionMin.dX) / 2) * rate;
+        mEdgeVectorPositionMax.dY = (mEdgeVectorPositionMax.dY - (mEdgeVectorPositionMax.dY + mEdgePositionMin.dY) / 2) * rate;
+        mEdgeVectorPositionMax.dZ = (mEdgeVectorPositionMax.dZ - (mEdgeVectorPositionMax.dZ + mEdgePositionMin.dZ) / 2) * rate;
     }
 
     @Override
     public Entity isInside(final Entity object) {
         // TODO Use the cube made by the extreme point : easier
 
-        if (object.physic.noContact || this.physic.noContact)
+        if (object.mPhysic.noContact || mPhysic.noContact) {
             return null;
+        }
 
-        if (object.edgeVerticeMin.dX + object.position.dX > this.edgeVerticeMax.dX + this.position.dX)
+        if (object.mEdgePositionMin.dX + object.mPosition.dX > mEdgeVectorPositionMax.dX + mPosition.dX ||
+                mEdgePositionMin.dX + mPosition.dX > object.mEdgeVectorPositionMax.dX + object.mPosition.dX) {
             return null;
-        if (this.edgeVerticeMin.dX + this.position.dX > object.edgeVerticeMax.dX + object.position.dX)
-            return null;
+        }
 
-        if (object.edgeVerticeMin.dY + object.position.dY > this.edgeVerticeMax.dY + this.position.dY)
+        if (object.mEdgePositionMin.dY + object.mPosition.dY > mEdgeVectorPositionMax.dY + mPosition.dY ||
+                mEdgePositionMin.dY + mPosition.dY > object.mEdgeVectorPositionMax.dY + object.mPosition.dY) {
             return null;
-        if (this.edgeVerticeMin.dY + this.position.dY > object.edgeVerticeMax.dY + object.position.dY)
-            return null;
+        }
 
-        if (object.edgeVerticeMin.dZ + object.position.dZ > this.edgeVerticeMax.dZ + this.position.dZ)
+        if (object.mEdgePositionMin.dZ + object.mPosition.dZ > mEdgeVectorPositionMax.dZ + mPosition.dZ ||
+                mEdgePositionMin.dZ + mPosition.dZ > object.mEdgeVectorPositionMax.dZ + object.mPosition.dZ) {
             return null;
-        if (this.edgeVerticeMin.dZ + this.position.dZ > object.edgeVerticeMax.dZ + object.position.dZ)
-            return null;
+        }
 
         return object;
     }
 
     public boolean isInside(final EntityGroup contacts) {
-        entitiesContact = new ArrayList<Entity>();
-        for (Entity entity : contacts.entities) // Check contact
-            if (entity.id != this.id)
-                if (this.isInside(entity) != null)
-                    entitiesContact.add(entity);
+        entitiesContact = new ArrayList<>();
+        // Check contact
+        for (Entity entity : contacts.mEntities) {
+            if (entity.mId != mId && isInside(entity) != null) {
+                entitiesContact.add(entity);
+            }
+        }
         return (entitiesContact.size() != 0);
     }
 
     @Override
     public void translateRepetedWayPosition() {
         if (repetedWayPosition != null) {
-            myVector3D tmp = null;
-            if ((tmp = repetedWayPosition.getCurrentPosition()) != null)
-                translate(tmp.dX - this.position.dX, tmp.dY - this.position.dY, tmp.dZ - this.position.dZ);
+            Vector3D tmp;
+            if ((tmp = repetedWayPosition.getCurrentPosition()) != null) {
+                translate(tmp.dX - this.mPosition.dX, tmp.dY - this.mPosition.dY, tmp.dZ - this.mPosition.dZ);
+            }
         }
     }
 
     /**
-     * Execute by the physics thread
+     * Execute by the physics thread.
+     * Compute the Newton 2nd law.
      */
     @Override
     public void computeForces(final EntityGroup contacts) {
 
-        // TODO Newton 2 law
+        /* ************** */
+        /*  NEWTON 2 LAW  */
+        /* ************** */
 
-        if (physic.mass != 0) {
+        if (mPhysic.mass != 0) {
 
-            this.sum_force.dX = 0;
-            this.sum_force.dY = 0;
-            this.sum_force.dZ = 0;
+            mSumForces.dX = 0;
+            mSumForces.dY = 0;
+            mSumForces.dZ = 0;
 
-            for (Force force : this.forces) {
-                myVector3D forceV = force.getForceV(this);
-                sum_force.dX += forceV.dX * ((force.dotMass) ? physic.mass : 1);
-                sum_force.dY += forceV.dY * ((force.dotMass) ? physic.mass : 1);
-                sum_force.dZ += forceV.dZ * ((force.dotMass) ? physic.mass : 1);
+            for (final Force force : mForces) {
+                final Vector3D forceV = force.getForceV(this);
+                mSumForces.dX += forceV.dX * ((force.dotMass) ? mPhysic.mass : 1);
+                mSumForces.dY += forceV.dY * ((force.dotMass) ? mPhysic.mass : 1);
+                mSumForces.dZ += forceV.dZ * ((force.dotMass) ? mPhysic.mass : 1);
             }
 
             if (contactEnable) {
-                boolean isInside = this.isInside(contacts);
+                final boolean isInside = isInside(contacts);
 
-                if ((this.position.dY <= 0.0f + Math.abs(this.edgeVerticeMin.dY)) && this.velocity.dY < 0) { // Cheat Contact with floor : contact force
-                    if (contactFloorListener != null)
-                        if (contactFloorListener.condition(this))
-                            contactFloorListener.execute(this);
-                    this.velocity.dY = -this.velocity.dY * 0.65f;
+                if ((mPosition.dY <= 0.0f + Math.abs(mEdgePositionMin.dY)) && mVelocity.dY < 0) { // Cheat Contact with floor : contact force
+                    if (contactFloorListener != null && contactFloorListener.condition(this)) {
+                        contactFloorListener.execute(this);
+                    }
+                    mVelocity.dY = -mVelocity.dY * 0.65f;
                 } else if (insideLastLoop && isInside) {
                     // Spring force : thanks teacher idea
                     if (entitiesContact != null) {
                         for (Entity entityContact : entitiesContact) {
-                            if (entityContact.edgeVerticeMin.dY + entityContact.position.dY < this.edgeVerticeMin.dY + this.position.dY && this.edgeVerticeMin.dY + this.position.dY < entityContact.edgeVerticeMax.dY + entityContact.position.dY) {
-                                if ((entityContact.edgeVerticeMax.dY + entityContact.position.dY) - (this.edgeVerticeMin.dY + this.position.dY) + this.position.dY > 0)
-                                    sum_force.dY += 0.000003f * ((entityContact.edgeVerticeMax.dY + entityContact.position.dY) - (this.edgeVerticeMin.dY + this.position.dY)) / Math.abs(entityContact.edgeVerticeMax.dY - entityContact.edgeVerticeMin.dY);
+                            if (entityContact.mEdgePositionMin.dY + entityContact.mPosition.dY < mEdgePositionMin.dY + mPosition.dY &&
+                                    mEdgePositionMin.dY + mPosition.dY < entityContact.mEdgeVectorPositionMax.dY + entityContact.mPosition.dY) {
+
+                                if ((entityContact.mEdgeVectorPositionMax.dY + entityContact.mPosition.dY) - (mEdgePositionMin.dY + mPosition.dY) + mPosition.dY > 0) {
+                                    mSumForces.dY += 0.000003f * ((entityContact.mEdgeVectorPositionMax.dY + entityContact.mPosition.dY) - (mEdgePositionMin.dY + mPosition.dY)) / Math.abs(entityContact.mEdgeVectorPositionMax.dY - entityContact.mEdgePositionMin.dY);
+                                }
                             } else {
-                                if ((entityContact.edgeVerticeMin.dY + entityContact.position.dY) - (this.edgeVerticeMax.dY + this.position.dY) + this.position.dY > 0)
-                                    sum_force.dY += 0.000003f * ((entityContact.edgeVerticeMin.dY + entityContact.position.dY) - (this.edgeVerticeMax.dY + this.position.dY)) / Math.abs(entityContact.edgeVerticeMax.dY - entityContact.edgeVerticeMin.dY);
+                                if ((entityContact.mEdgePositionMin.dY + entityContact.mPosition.dY) - (mEdgeVectorPositionMax.dY + mPosition.dY) + mPosition.dY > 0) {
+                                    mSumForces.dY += 0.000003f * ((entityContact.mEdgePositionMin.dY + entityContact.mPosition.dY) - (mEdgeVectorPositionMax.dY + mPosition.dY)) / Math.abs(entityContact.mEdgeVectorPositionMax.dY - entityContact.mEdgePositionMin.dY);
+                                }
                             }
                         }
                     }
-                } else if ((isInside) && this.velocity.dY < 0) { // Contact with object
+                } else if ((isInside) && this.mVelocity.dY < 0) { // Contact with object
                     insideLastLoop = true;
-                    this.velocity.dY = -this.velocity.dY * 0.65f; // Cheat
+                    mVelocity.dY = -mVelocity.dY * 0.65f; // Cheat
 
-                    //this.velocity.dY = entityContact.velocity.dY * 1.0f; // Cheat
+                    //this.mVelocity.dY = entityContact.mVelocity.dY * 1.0f; // Cheat
                     /*
-					this.velocity.dY = 0;
+                    this.mVelocity.dY = 0;
 					for(Entity ent : entitiesContact)
-						this.velocity.dY += ent.velocity.dY*ent.velocity.dY ;
+						this.mVelocity.dY += ent.mVelocity.dY*ent.mVelocity.dY ;
 					*/
-                    //this.velocity.dY = (float) Math.sqrt(this.velocity.dY);
+                    //this.mVelocity.dY = (float) Math.sqrt(this.mVelocity.dY);
 
-                    //this.velocity.dY = (entityContact.physic.mass/this.physic.mass) * entityContact.velocity.dY * 1.0f; // Best equation
+                    //this.mVelocity.dY = (entityContact.mPhysic.mass/this.mPhysic.mass) * entityContact.mVelocity.dY * 1.0f; // Best equation
                 } else if (isInside) {
                     insideLastLoop = true;
-                    this.velocity.dX = -this.velocity.dX * 0.65f;
-                    this.velocity.dZ = -this.velocity.dZ * 0.65f;
+                    this.mVelocity.dX = -this.mVelocity.dX * 0.65f;
+                    this.mVelocity.dZ = -this.mVelocity.dZ * 0.65f;
                 } else if (!isInside) {
                     insideLastLoop = false;
                 }
@@ -628,33 +642,37 @@ public class myObject3D extends Entity {
 
     @Override
     public void applyForces(final EntityGroup contacts) {
-        if (physic.mass != 0) {
+        if (mPhysic.mass != 0) {
 
-            this.acceleration.dX = (this.sum_force.dX) / this.physic.mass;
-            this.acceleration.dY = (this.sum_force.dY) / this.physic.mass;
-            this.acceleration.dZ = (this.sum_force.dZ) / this.physic.mass;
+            mAcceleration.dX = (mSumForces.dX) / mPhysic.mass;
+            mAcceleration.dY = (mSumForces.dY) / mPhysic.mass;
+            mAcceleration.dZ = (mSumForces.dZ) / mPhysic.mass;
 
-            if ((PhysicsConst.REAL_LOOP_TIME * (this.velocity.dY + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dY / 2) < 0 && this.position.dY - Math.abs(this.edgeVerticeMin.dY) < 0)) {
+            if ((PhysicsConst.REAL_LOOP_TIME * (mVelocity.dY + PhysicsConst.REAL_LOOP_TIME * mAcceleration.dY / 2) < 0 &&
+                    mPosition.dY - Math.abs(mEdgePositionMin.dY) < 0)) {
 
-                this.velocity.dX *= 0.97;
-                this.velocity.dZ *= 0.97;
+                mVelocity.dX *= 0.97;
+                mVelocity.dZ *= 0.97;
 
-                translate(PhysicsConst.REAL_LOOP_TIME * (this.velocity.dX + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dX / 2),
+                translate(
+                        PhysicsConst.REAL_LOOP_TIME * (mVelocity.dX + PhysicsConst.REAL_LOOP_TIME * mAcceleration.dX / 2),
                         0,
-                        PhysicsConst.REAL_LOOP_TIME * (this.velocity.dZ + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dZ / 2));
-            } else
-                translate(PhysicsConst.REAL_LOOP_TIME * (this.velocity.dX + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dX / 2),
-                        PhysicsConst.REAL_LOOP_TIME * (this.velocity.dY + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dY / 2),
-                        PhysicsConst.REAL_LOOP_TIME * (this.velocity.dZ + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dZ / 2));
+                        PhysicsConst.REAL_LOOP_TIME * (mVelocity.dZ + PhysicsConst.REAL_LOOP_TIME * mAcceleration.dZ / 2));
+            } else {
+                translate(
+                        PhysicsConst.REAL_LOOP_TIME * (mVelocity.dX + PhysicsConst.REAL_LOOP_TIME * mAcceleration.dX / 2),
+                        PhysicsConst.REAL_LOOP_TIME * (mVelocity.dY + PhysicsConst.REAL_LOOP_TIME * mAcceleration.dY / 2),
+                        PhysicsConst.REAL_LOOP_TIME * (mVelocity.dZ + PhysicsConst.REAL_LOOP_TIME * mAcceleration.dZ / 2));
+            }
 
-            this.velocity.dX += PhysicsConst.REAL_LOOP_TIME * this.acceleration.dX;
-            this.velocity.dY += PhysicsConst.REAL_LOOP_TIME * this.acceleration.dY;
-            this.velocity.dZ += PhysicsConst.REAL_LOOP_TIME * this.acceleration.dZ;
+            mVelocity.dX += PhysicsConst.REAL_LOOP_TIME * mAcceleration.dX;
+            mVelocity.dY += PhysicsConst.REAL_LOOP_TIME * mAcceleration.dY;
+            mVelocity.dZ += PhysicsConst.REAL_LOOP_TIME * mAcceleration.dZ;
         }
     }
 
     @Override
     public void addForce(Force force) {
-        this.forces.add(force);
+        mForces.add(force);
     }
 }

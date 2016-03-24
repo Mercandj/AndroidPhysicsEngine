@@ -7,8 +7,8 @@
 
 package com.esieeAPE.objects;
 
+import com.esieeAPE.lib.Vector3D;
 import com.esieeAPE.lib.WayPosition;
-import com.esieeAPE.lib.myVector3D;
 import com.esieeAPE.physics.Force;
 import com.esieeAPE.physics.PhysicsObjStats;
 
@@ -22,22 +22,24 @@ import java.util.List;
  */
 public abstract class Entity {
 
-    public int id;                    // identify entity in an EntityGroup
+    public int mId;                    // identify entity in an EntityGroup
 
-    public PhysicsObjStats physic = new PhysicsObjStats();
+    public PhysicsObjStats mPhysic = new PhysicsObjStats();
 
-    public myVector3D edgeVerticeMin = null;
-    public myVector3D edgeVerticeMax = null;
+    public Vector3D mEdgePositionMin;
+    public Vector3D mEdgeVectorPositionMax;
 
-    public myVector3D position = new myVector3D(0, 0, 0);
-    public myVector3D velocity = new myVector3D(0, 0, 0);
-    public myVector3D acceleration = new myVector3D(0, 0, 0);
+    public final Vector3D mPosition = new Vector3D(0, 0, 0);
+    public final Vector3D mVelocity = new Vector3D(0, 0, 0);
+    protected final Vector3D mAcceleration = new Vector3D(0, 0, 0);
+
     // Move
     public WayPosition repetedWayPosition;
+
     // Physics
     public boolean contactEnable = true;
-    protected myVector3D sum_force = new myVector3D(0, 0, 0);
-    protected List<Force> forces = new ArrayList<Force>();
+    protected final Vector3D mSumForces = new Vector3D(0, 0, 0);
+    protected final List<Force> mForces = new ArrayList<>();
     protected List<Entity> entitiesContact;
 
     public abstract void teleport(float x, float y, float z);

@@ -22,55 +22,51 @@ import java.util.List;
  */
 public class EntityGroup extends Entity {
 
-    public final Context context;
-    public List<Entity> entities;
+    public final Context mContext;
+    public final List<Entity> mEntities;
 
     public EntityGroup(final Context context) {
-        this.context = context;
-        this.entities = new ArrayList<Entity>();
-    }
-
-    public EntityGroup(final Context context, List<Entity> entities) {
-        this.context = context;
-        this.entities = entities;
-        if (this.entities == null)
-            this.entities = new ArrayList<Entity>();
+        mContext = context;
+        mEntities = new ArrayList<>();
     }
 
     public void init() {
     }
 
     public void addEntity(Entity entity) {
-        entity.id = entities.size();
-        entities.add(entity);
+        entity.mId = mEntities.size();
+        mEntities.add(entity);
     }
 
     public Entity getEntity(int id) {
-        if (id < entities.size())
-            return entities.get(id);
+        if (id < mEntities.size()) {
+            return mEntities.get(id);
+        }
         return null;
     }
 
     @Override
     public Entity isInside(Entity object) {
-        Entity res = null;
-        l:
-        for (Entity entity : this.entities)
-            if ((res = entity.isInside(object)) != null)
-                break l;
-        return res;
+        for (Entity entity : mEntities) {
+            if (entity.isInside(object) != null) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     @Override
     public void teleport(float x, float y, float z) {
-        for (Entity entity : this.entities)
+        for (Entity entity : mEntities) {
             entity.teleport(x, y, z);
+        }
     }
 
     @Override
     public void translate(float x, float y, float z) {
-        for (Entity entity : this.entities)
+        for (Entity entity : mEntities) {
             entity.translate(x, y, z);
+        }
     }
 
     @Override
@@ -80,51 +76,57 @@ public class EntityGroup extends Entity {
 
     @Override
     public void draw(float[] _mpMatrix, float[] _mvMatrix) {
-        for (Entity entity : this.entities)
+        for (Entity entity : mEntities) {
             entity.draw(_mpMatrix, _mvMatrix);
+        }
     }
 
     @Override
     public void scale(float rate) {
-        for (Entity entity : this.entities)
+        for (Entity entity : mEntities) {
             entity.scale(rate);
+        }
     }
 
     @Override
     public void translateRepetedWayPosition() {
-        for (Entity entity : this.entities)
+        for (Entity entity : mEntities) {
             entity.translateRepetedWayPosition();
+        }
     }
 
     @Override
     public void computeForces(EntityGroup contacts) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.mEntities) {
             entity.computeForces(contacts);
+        }
     }
 
     @Override
     public void applyForces(EntityGroup contacts) {
-        for (Entity entity : this.entities)
+        for (Entity entity : mEntities) {
             entity.applyForces(contacts);
+        }
     }
 
     @Override
     public void addForce(Force force) {
-        for (Entity entity : this.entities)
-            entity.forces.add(force);
+        for (Entity entity : mEntities) {
+            entity.mForces.add(force);
+        }
     }
 
     public void separeObject() {
-        for (Entity ent : entities) {
+        for (Entity ent : mEntities) {
             Entity entityContact = this.isInside(ent);
             if (entityContact != null) {
-                if (PhysicsConst.REAL_LOOP_TIME * (this.velocity.dY + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dY / 2) > 0) {
+                if (PhysicsConst.REAL_LOOP_TIME * (this.mVelocity.dY + PhysicsConst.REAL_LOOP_TIME * this.mAcceleration.dY / 2) > 0) {
                     translate(0,
-                            Math.abs(entityContact.position.dY - this.position.dY),
+                            Math.abs(entityContact.mPosition.dY - this.mPosition.dY),
                             0);
                 } else {
                     translate(0,
-                            -Math.abs(entityContact.position.dY - this.position.dY),
+                            -Math.abs(entityContact.mPosition.dY - this.mPosition.dY),
                             0);
                 }
             }

@@ -30,10 +30,7 @@ public class Config {
 
     private static void write_txt(Activity activity, String file, String txt) {
         try {
-            // Flux interne
             final FileOutputStream output = activity.openFileOutput(file, Context.MODE_PRIVATE);
-
-            // On ecrit dans le flux interne
             output.write((txt).getBytes());
             output.close();
         } catch (IOException e) {
@@ -47,25 +44,15 @@ public class Config {
         try {
             FileInputStream input = activity.openFileInput(file);
             int value;
-            // On utilise un StringBuffer pour construire la chaine au fur et a mesure
             StringBuffer lu = new StringBuffer();
-            // On lit les caracteres les uns apres les autres
             while ((value = input.read()) != -1) {
-                // On ecrit dans le fichier le caractere lu
                 lu.append((char) value);
             }
-            //Toast.makeText(PseudoActivity.this, "Bienvenue : " + lu.toString(), Toast.LENGTH_SHORT).show();
-            if (input != null) {
-                input.close();
-                if (lu.toString() != null)
-                    res = lu.toString();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            input.close();
+            res = lu.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (res == null) return "";
         return res;
     }
 

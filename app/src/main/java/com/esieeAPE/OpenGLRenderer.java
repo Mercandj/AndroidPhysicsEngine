@@ -44,7 +44,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
     public OpenGLRenderer(Context context, OpenGLSurfaceView mGLView) {
         this.context = context;
         this.mGLView = mGLView;
-        this.camera = new Camera(context);
+        this.camera = new Camera();
         this.world = new World(context, camera);
     }
 
@@ -108,7 +108,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
 
-        Matrix.perspectiveM(mProjMatrix, 0, camera.fovy, ratio, camera.zNear, camera.zFar);
+        Matrix.perspectiveM(mProjMatrix, 0, camera.mFovy, ratio, camera.mZNear, camera.mZFar);
         mWidth = width;
         mHeight = height;
     }

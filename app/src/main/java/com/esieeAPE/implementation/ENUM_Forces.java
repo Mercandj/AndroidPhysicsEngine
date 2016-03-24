@@ -10,7 +10,7 @@ package com.esieeAPE.implementation;
 import com.esieeAPE.physics.Force;
 
 /**
- * Define the forces you want (maybe) use (only World.class apply to the scene the forces you use)
+ * Define the mForces you want (maybe) use (only World.class apply to the scene the forces you use)
  * For instance you have : Force (=ForceField), ForcePoint (=ForceField+Point)
  *
  * @author Jonathan

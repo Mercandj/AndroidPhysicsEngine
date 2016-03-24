@@ -2,14 +2,14 @@ package com.esieeAPE.objects;
 
 import android.content.Context;
 
-import com.esieeAPE.lib.myVector3D;
+import com.esieeAPE.lib.Vector3D;
 
-public class Car extends myObject3D {
+public class Car extends Object3D {
 
-    public myVector3D forward;
+    public Vector3D forward;
     public float angleY = 0;
 
-    public Car(Context context, myVector3D forward) {
+    public Car(Context context, Vector3D forward) {
         super(context);
         this.forward = forward;
     }

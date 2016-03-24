@@ -8,7 +8,7 @@
 package com.esieeAPE.physics;
 
 /**
- * Global world physic constants
+ * Global world mPhysic constants
  *
  * @author Jonathan
  */

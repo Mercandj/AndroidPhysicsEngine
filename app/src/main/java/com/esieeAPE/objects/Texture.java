@@ -19,14 +19,14 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 /**
- * Object's Texture use with myObject3D
+ * Object's Texture use with Object3D
  * @author Jonathan
  *
  */
-public class myTexture {
+public class Texture {
     int[] texName = new int[1];
 
-    public myTexture(Context context, int resourceId) {
+    public Texture(Context context, int resourceId) {
         GLES30.glGenTextures(1, texName, 0);
 
         // Better way to get Bitmap from resource
@@ -63,7 +63,7 @@ public class myTexture {
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0);
     }
 
-    public myTexture(Context context, int resourceId, int bump) {
+    public Texture(Context context, int resourceId, int bump) {
         GLES30.glGenTextures(1, texName, 0);
 
         // Better way to get Bitmap from resource

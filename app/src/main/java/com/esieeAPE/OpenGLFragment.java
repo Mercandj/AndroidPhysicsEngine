@@ -9,6 +9,7 @@ package com.esieeAPE;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -85,13 +86,14 @@ public class OpenGLFragment extends Fragment implements SensorEventListener {
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mRotation = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
 
-        Font.applyFont(((TextView) rootView.findViewById(R.id.about)), "fonts/MYRIADAB.TTF");
-        Font.applyFont(((TextView) rootView.findViewById(R.id.fps)), "fonts/MYRIADAB.TTF");
+        final Typeface font = Typeface.createFromAsset(rootView.getContext().getAssets(), "fonts/MYRIADAB.TTF");
+        ((TextView) rootView.findViewById(R.id.about)).setTypeface(font);
+        ((TextView) rootView.findViewById(R.id.fps)).setTypeface(font);
 
-        Font.applyFont(((TextView) rootView.findViewById(R.id.name)), "fonts/MYRIADAB.TTF");
-        Font.applyFont(((TextView) rootView.findViewById(R.id.name_full)), "fonts/MYRIADAB.TTF");
-        Font.applyFont(((TextView) rootView.findViewById(R.id.author_left)), "fonts/MYRIADAB.TTF");
-        Font.applyFont(((TextView) rootView.findViewById(R.id.author_right)), "fonts/MYRIADAB.TTF");
+        ((TextView) rootView.findViewById(R.id.name)).setTypeface(font);
+        ((TextView) rootView.findViewById(R.id.name_full)).setTypeface(font);
+        ((TextView) rootView.findViewById(R.id.author_left)).setTypeface(font);
+        ((TextView) rootView.findViewById(R.id.author_right)).setTypeface(font);
 
         fps = (TextView) rootView.findViewById(R.id.fps);
         wait = (ProgressBar) rootView.findViewById(R.id.wait);

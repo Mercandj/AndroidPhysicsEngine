@@ -21,26 +21,28 @@ varying vec2 mytexturecoords;
 void main() {
 	vec4 texture = texture2D(texMap, mytexturecoords);
 
-	vec3 eyepos = vec3(0,0,0); 	
+	vec3 eyepos = vec3(0, 0, 0);
 	vec4 _mypos = uMVMatrix * myvertex;
 	vec3 mypos = _mypos.xyz / _mypos.w;	
 	
-	vec4 _lightpos = vec4(0,6,10,1);
+	vec4 _lightpos = vec4(0, 6, 10, 1);
 	_lightpos = uMVMatrix * _lightpos;
 	vec3 lightpos = _lightpos.xyz / _lightpos.w;	
 	
-	vec3 normal = normalize(vec3(uNMatrix * vec4(mynormal,0)));	
+	vec3 normal = normalize(vec3(uNMatrix * vec4(mynormal, 0)));
 	vec3 eyedir = normalize(eyepos - mypos);
 	vec3 lightdir = normalize (lightpos - mypos);	
 	vec3 reflectdir = normalize( reflect(-lightdir, normal) );
 	
-	float diffuse = max( dot(lightdir, normal), 0.0);	
-	float specular = pow(max( dot(reflectdir,eyedir), 0.0), 50.0);
-	
-	if(isBumpMapping==1) {
+	float diffuse = max( dot(lightdir, normal), 0.0); // smooth light
+	float specular = pow(max( dot(reflectdir,eyedir), 0.0), 50.0); // look shiny
+
+	// Fake the texture to add 3d effects.
+	if(isBumpMapping == 1) {
+
 		// # In your fragment shader, compute the matrix to transform the light direction, and the eye direction from the world space to tangent space.		
-		vec3 n = normalize (vec3(uNMatrix * vec4(mynormal,0)));
-		vec3 t = normalize (vec3(uNMatrix * vec4(mytangent,0)));
+		vec3 n = normalize (vec3(uNMatrix * vec4(mynormal, 0)));
+		vec3 t = normalize (vec3(uNMatrix * vec4(mytangent, 0)));
 		vec3 b = normalize (cross(n,t));		
 		//mat3 in_m = mat3(t,b,n); mat3 out_m = transpose(in_m);
 		mat3 out_m = mat3(
@@ -59,6 +61,7 @@ void main() {
 		reflectdir = normalize( reflect(-lightdir, normal) );
 		specular = pow(max( dot(reflectdir,eyedir), 0.0), 50.0);
 	}
-	
-	gl_FragColor =  vec4(0.1,0.1,0.1,1) + (texture) * (diffuse + specular);
+
+	// Ambient light + Texture * ( Diffuse light + Specular light )
+	gl_FragColor =  vec4(0.1, 0.1, 0.1, 1) + (texture) * (diffuse + specular);
 }

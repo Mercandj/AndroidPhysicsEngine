@@ -128,11 +128,14 @@ public class lib {
         float scale = 1.0f;
 
         try {
-            Vector<Float> verts = new Vector<Float>();
-            Vector<Short> inds = new Vector<Short>();
+            final Vector<Float> verts = new Vector<Float>();
+            final Vector<Short> inds = new Vector<Short>();
             while ((line = r.readLine()) != null) {
 
                 lineTokenizer = new Scanner(line);
+
+                lineTokenizer.reset();
+
                 t = lineTokenizer.next();
                 if (t.equals("v")) {
                     u = lineTokenizer.next();
@@ -198,6 +201,13 @@ public class lib {
             e.printStackTrace();
         }
 
-        return new IndicesVertices(vertices, indices, new myVector3D((xmin - (xmax + xmin) / 2) / scale, (ymin - (ymax + ymin) / 2) / scale, (zmin - (zmax + zmin) / 2) / scale), new myVector3D((xmax - (xmax + xmin) / 2) / scale, (ymax - (ymax + ymin) / 2) / scale, (zmax - (zmax + zmin) / 2) / scale));
+        return new IndicesVertices(vertices, indices, new Vector3D(
+                (xmin - (xmax + xmin) / 2) / scale,
+                (ymin - (ymax + ymin) / 2) / scale,
+                (zmin - (zmax + zmin) / 2) / scale),
+                new Vector3D(
+                        (xmax - (xmax + xmin) / 2) / scale,
+                        (ymax - (ymax + ymin) / 2) / scale,
+                        (zmax - (zmax + zmin) / 2) / scale));
     }
 }

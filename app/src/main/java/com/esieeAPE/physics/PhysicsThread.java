@@ -15,30 +15,28 @@ package com.esieeAPE.physics;
 public class PhysicsThread extends Thread {
 
     public boolean isRunning = true;
-    private IPhysicsThreadContent content;
-    private int timeLoop;
-    private long tmp_time;
-    private long time_sleep;
+    private final IPhysicsThreadContent mContent;
+    private final int mTimeLoop;
 
     public PhysicsThread(IPhysicsThreadContent content, int timeLoop) {
-        this.content = content;
-        this.timeLoop = timeLoop;
+        this.mContent = content;
+        this.mTimeLoop = timeLoop;
     }
 
     @Override
     public void run() {
         try {
             while (isRunning) {
-                tmp_time = System.currentTimeMillis();
+                final long tmp_time = System.currentTimeMillis();
 
-                // Execute physic
-                content.execute();
-
-                tmp_time = System.currentTimeMillis() - tmp_time;
+                // Execute mPhysic
+                mContent.execute();
 
                 // World Speed
-                if ((time_sleep = timeLoop - tmp_time) > 0)
+                long time_sleep;
+                if ((time_sleep = mTimeLoop - (System.currentTimeMillis() - tmp_time)) > 0) {
                     sleep(time_sleep);
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

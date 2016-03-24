@@ -5,7 +5,7 @@ import java.util.List;
 
 public class WayPosition {
 
-    public List<myVector3D> way = new ArrayList<myVector3D>();
+    public List<Vector3D> way = new ArrayList<Vector3D>();
     public boolean reverse = false;
     private int currentID = 0;
 
@@ -13,11 +13,11 @@ public class WayPosition {
 
     }
 
-    public WayPosition(List<myVector3D> way) {
+    public WayPosition(List<Vector3D> way) {
         this.way = way;
     }
 
-    public void add(myVector3D v) {
+    public void add(Vector3D v) {
         way.add(v);
     }
 
@@ -25,11 +25,11 @@ public class WayPosition {
         return way.size();
     }
 
-    public myVector3D get(int i) {
+    public Vector3D get(int i) {
         return way.get(i);
     }
 
-    public myVector3D getCurrentPosition() {
+    public Vector3D getCurrentPosition() {
         int res = currentID;
         if (!reverse) {
             if (currentID + 1 >= size())
@@ -46,20 +46,20 @@ public class WayPosition {
     }
 
     public void initCubeWabHorizontal(float centerX, float centerY, float centerZ, float size, float foot, boolean right) {
-        way = new ArrayList<myVector3D>();
+        way = new ArrayList<Vector3D>();
         float divcote = size / 2;
 
         for (float i = centerX - divcote; i <= centerX + divcote; i += foot)
-            add(new myVector3D(i, centerY, centerZ - divcote));
+            add(new Vector3D(i, centerY, centerZ - divcote));
 
         for (float i = centerZ - divcote; i <= centerZ + divcote; i += foot)
-            add(new myVector3D(centerX + divcote, centerY, i));
+            add(new Vector3D(centerX + divcote, centerY, i));
 
         for (float i = centerX + divcote; i >= centerX - divcote; i -= foot)
-            add(new myVector3D(i, centerY, centerZ + divcote));
+            add(new Vector3D(i, centerY, centerZ + divcote));
 
         for (float i = centerZ + divcote; i >= centerZ - divcote; i -= foot)
-            add(new myVector3D(centerX - divcote, centerY, i));
+            add(new Vector3D(centerX - divcote, centerY, i));
 
         reverse = !right;
     }

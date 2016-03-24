@@ -8,7 +8,7 @@
 package com.esieeAPE.lib;
 
 /**
- * Simple triplet : you also have myVector3D witch is more specific
+ * Simple triplet : you also have Vector3D witch is more specific
  *
  * @author Jonathan
  */

@@ -7,8 +7,8 @@
 
 package com.esieeAPE.physics;
 
-import com.esieeAPE.lib.Predicat;
-import com.esieeAPE.lib.myVector3D;
+import com.esieeAPE.lib.Predicate;
+import com.esieeAPE.lib.Vector3D;
 
 /**
  * Force "ponctuelle" : Physics Force
@@ -18,9 +18,9 @@ import com.esieeAPE.lib.myVector3D;
 public class ForcePoint extends Force {
 
     public float intensity;
-    protected myVector3D pointToApply;
+    protected Vector3D pointToApply;
 
-    public ForcePoint(float x, float y, float z, float intensity, boolean dotMass, Predicat isApplyForce) {
+    public ForcePoint(float x, float y, float z, float intensity, boolean dotMass, Predicate isApplyForce) {
         super(x, y, z, intensity, dotMass, isApplyForce);
         // TODO Auto-generated constructor stub
     }

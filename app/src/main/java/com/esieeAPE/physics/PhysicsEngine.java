@@ -11,10 +11,10 @@ import android.content.Context;
 
 import com.esieeAPE.Const;
 import com.esieeAPE.OpenGLSurfaceView;
-import com.esieeAPE.lib.myVector3D;
+import com.esieeAPE.lib.Vector3D;
 
 /**
- * Define the physic's thread behavior
+ * Define the mPhysic's thread behavior
  *
  * @author Jonathan
  */
@@ -35,9 +35,10 @@ public class PhysicsEngine {
             @Override
             public void execute() {
 
-                // Compute Forces to entities and myObject3D
+                // Compute Forces to mEntities and Object3D
                 mGLView.mRenderer.world.computeForces(mGLView.mRenderer.world);
-                // Apply Forces to entities and myObject3D
+
+                // Apply Forces to mEntities and Object3D
                 mGLView.mRenderer.world.applyForces(mGLView.mRenderer.world);
 
                 // Bot or repeated moves
@@ -76,7 +77,7 @@ public class PhysicsEngine {
                     mGLView.mRenderer.camera.computeForward();
                 } else if (mGLView.mRenderer.camera.right) {
 
-                    myVector3D tmp = mGLView.mRenderer.camera.mForward.cross(mGLView.mRenderer.camera.mUp);
+                    Vector3D tmp = mGLView.mRenderer.camera.mForward.cross(mGLView.mRenderer.camera.mUp);
 
                     float mouveX = tmp.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.9f : 7.0f);
                     if ((mouveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (mouveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT))
@@ -91,7 +92,7 @@ public class PhysicsEngine {
                         mGLView.mRenderer.camera.mEye.dZ += mouveZ;
                 } else if (mGLView.mRenderer.camera.left) {
 
-                    myVector3D tmp = mGLView.mRenderer.camera.mUp.cross(mGLView.mRenderer.camera.mForward);
+                    Vector3D tmp = mGLView.mRenderer.camera.mUp.cross(mGLView.mRenderer.camera.mForward);
 
                     float mouveX = tmp.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.9f : 7.0f);
                     if ((mouveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (mouveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT))
