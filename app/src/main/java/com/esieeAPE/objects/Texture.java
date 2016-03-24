@@ -30,8 +30,7 @@ public class Texture {
         GLES30.glGenTextures(1, texName, 0);
 
         // Better way to get Bitmap from resource
-        int textureId = resourceId;
-        InputStream is = context.getResources().openRawResource(textureId);
+        InputStream is = context.getResources().openRawResource(resourceId);
         Bitmap bitmap;
         try {
             bitmap = BitmapFactory.decodeStream(is);
@@ -67,8 +66,7 @@ public class Texture {
         GLES30.glGenTextures(1, texName, 0);
 
         // Better way to get Bitmap from resource
-        int textureId = resourceId;
-        InputStream is = context.getResources().openRawResource(textureId);
+        InputStream is = context.getResources().openRawResource(resourceId);
         Bitmap bitmap;
         try {
             bitmap = BitmapFactory.decodeStream(is);

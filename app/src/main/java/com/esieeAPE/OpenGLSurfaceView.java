@@ -58,6 +58,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         setRenderer(mRenderer);
+
         // Render the view only when there is a change in the drawing data
         setRenderMode(OpenGLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
@@ -67,7 +68,6 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
 
         // Create our ScaleGestureDetector
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
-
 
         senSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -98,7 +98,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
                 float dy = y - mPreviousY;
 
                 if (!mScaleDetector.isInProgress()) {
-                    mRenderer.camera.setView(dx / (density * 100.0f), -dy / (density * 100.0f));
+                    mRenderer.mCamera.setView(dx / (density * 100.0f), -dy / (density * 100.0f));
                     requestRender();
                 }
                 mPreviousX = x;
@@ -140,13 +140,14 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
 
             if ((curTime - lastUpdate) > 100) {
                 lastUpdate = curTime;
-                if (mRenderer != null)
-                    if (mRenderer.world != null)
-                        if (mRenderer.world.getEntity(World.carId) != null) {
-                            ((Car) mRenderer.world.getEntity(World.carId)).angleY += Math.sin(y / 10);
-                            ((Car) mRenderer.world.getEntity(World.carId)).updateForward();
-                            //mRenderer.world.getEntity(World.carId).rotate(rotationCar, 0, 1, 0);
-                        }
+                final World world;
+                if (mRenderer != null && (world = mRenderer.getWorld()) != null) {
+                    if (world.getEntity(World.carId) != null) {
+                        ((Car) world.getEntity(World.carId)).angleY += Math.sin(y / 10);
+                        ((Car) world.getEntity(World.carId)).updateForward();
+                        //mRenderer.mWorld.getEntity(World.carId).rotate(rotationCar, 0, 1, 0);
+                    }
+                }
             }
         }
     }
@@ -164,10 +165,10 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
             Log.v("mydebugger", Float.toString(mScaleFactor));
             if (mScaleFactor > 1) mScaleFactor = -1 / mScaleFactor;
             mScaleFactor /= -4;
-            mScaleFactor *= Math.sqrt(mRenderer.camera.mEye.length()) / 10;
+            mScaleFactor *= Math.sqrt(mRenderer.mCamera.mEye.length()) / 10;
 
             //mRenderer.mEye[2] *= (1 + mScaleFactor);
-            mRenderer.camera.mEye = mRenderer.camera.mEye.plus(mRenderer.camera.mForward.mult(mScaleFactor));
+            mRenderer.mCamera.mEye = mRenderer.mCamera.mEye.plus(mRenderer.mCamera.mForward.mult(mScaleFactor));
 
             //mRenderer.mEye[0] += mRenderer.mForwarddirection[0]*mScaleFactor;
             //mRenderer.mEye[1] += mRenderer.mForwarddirection[1]*mScaleFactor;

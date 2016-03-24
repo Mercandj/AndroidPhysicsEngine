@@ -24,7 +24,7 @@ public enum ENUM_Forces {
 
     public Force force;
 
-    private ENUM_Forces(Force force) {
+    ENUM_Forces(Force force) {
         this.force = force;
     }
 }

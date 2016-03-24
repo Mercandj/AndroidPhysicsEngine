@@ -54,7 +54,7 @@ public abstract class Entity {
 
     public abstract void draw(float[] _mpMatrix, float[] _mvMatrix);
 
-    public abstract void translateRepetedWayPosition();
+    public abstract void translateRepeatedWayPosition();
 
     public abstract void computeForces(EntityGroup contacts);
 

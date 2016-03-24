@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- * <p/>
+ * <p>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -22,30 +22,29 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- * OpenGL Renderer : instantiate the camera and the world
+ * OpenGL Renderer : instantiate the mCamera and the mWorld
  * Define what is draw
  *
  * @author Jonathan
  */
 public class OpenGLRenderer implements GLSurfaceView.Renderer {
 
-    public World world;
+    private final OpenGLSurfaceView mGLView;
+    public final Camera mCamera;
+    private final World mWorld;
+
     public float mWidth, mHeight;
-    public Camera camera;
     public long time, fps, tmp_time, tmp_fps; // fps measure
-    Context context;
-    OpenGLSurfaceView mGLView;
-    PhysicsEngine physicEngine;
+    PhysicsEngine mPhysicEngine;
     Handler handler = new Handler();
     private float[] mMVPMatrix = new float[16];
-    private float[] mProjMatrix = new float[16];
+    private float[] mProjectionMatrix = new float[16];
     private float[] mVMatrix = new float[16];
 
-    public OpenGLRenderer(Context context, OpenGLSurfaceView mGLView) {
-        this.context = context;
-        this.mGLView = mGLView;
-        this.camera = new Camera();
-        this.world = new World(context, camera);
+    public OpenGLRenderer(final Context context, final OpenGLSurfaceView openGLSurfaceView) {
+        mGLView = openGLSurfaceView;
+        mCamera = new Camera();
+        mWorld = new World(context, mCamera);
     }
 
     @Override
@@ -56,10 +55,9 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glEnable(GLES30.GL_DEPTH_TEST);
         GLES30.glDepthFunc(GLES30.GL_LESS);
 
-        this.world.init();
-        this.camera.init();
+        mWorld.init();
 
-        physicEngine = new PhysicsEngine(context, mGLView);
+        mPhysicEngine = new PhysicsEngine(mGLView);
 
         handler.post(new Runnable() { // Access UIThred
             public void run() {
@@ -77,10 +75,10 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
         GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT);
 
-        camera.look(mVMatrix);
+        mCamera.look(mVMatrix);
 
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
-        world.draw(mProjMatrix, mVMatrix);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mVMatrix, 0);
+        mWorld.draw(mProjectionMatrix, mVMatrix);
 
         GLES30.glFlush();
 
@@ -91,7 +89,7 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
                 public void run() {
                     String txt_display = "";
                     if (MainActivity.config.isDisplayPosition())
-                        txt_display += "pos" + camera.mEye + " \t";
+                        txt_display += "pos" + mCamera.mEye + " \t";
                     if (MainActivity.config.isDisplayFPS())
                         txt_display += "time = " + tmp_time + "\t  fps = " + fps + " fps";
                     OpenGLFragment.fps.setText(txt_display);
@@ -108,8 +106,12 @@ public class OpenGLRenderer implements GLSurfaceView.Renderer {
         GLES30.glViewport(0, 0, width, height);
         float ratio = (float) width / height;
 
-        Matrix.perspectiveM(mProjMatrix, 0, camera.mFovy, ratio, camera.mZNear, camera.mZFar);
+        Matrix.perspectiveM(mProjectionMatrix, 0, mCamera.mFovy, ratio, mCamera.mZNear, mCamera.mZFar);
         mWidth = width;
         mHeight = height;
+    }
+
+    public World getWorld() {
+        return mWorld;
     }
 }

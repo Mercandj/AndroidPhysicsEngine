@@ -107,13 +107,13 @@ public class MainActivity extends Activity {
 
             @Override
             public void execute() {
-                fragment.mGLView.mRenderer.physicEngine.thread.isRunning = false;
+                fragment.mGLView.mRenderer.mPhysicEngine.thread.isRunning = false;
                 fragment.mGLView.onPause();
                 fragment.mSensorManager.unregisterListener(fragment);
 
                 fragment.mGLView.onResume();
                 fragment.mSensorManager.registerListener(fragment, fragment.mRotation, SensorManager.SENSOR_DELAY_NORMAL);
-                fragment.mGLView.mRenderer.physicEngine.thread.isRunning = true;
+                fragment.mGLView.mRenderer.mPhysicEngine.thread.isRunning = true;
             }
         }, TYPE_NORMAL);
         //navDrawerItems.add(TAB_3);

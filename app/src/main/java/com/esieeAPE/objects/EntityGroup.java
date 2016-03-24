@@ -7,8 +7,6 @@
 
 package com.esieeAPE.objects;
 
-import android.content.Context;
-
 import com.esieeAPE.physics.Force;
 import com.esieeAPE.physics.PhysicsConst;
 
@@ -22,12 +20,9 @@ import java.util.List;
  */
 public class EntityGroup extends Entity {
 
-    public final Context mContext;
-    public final List<Entity> mEntities;
+    public final List<Entity> mEntities = new ArrayList<>();
 
-    public EntityGroup(final Context context) {
-        mContext = context;
-        mEntities = new ArrayList<>();
+    public EntityGroup() {
     }
 
     public void init() {
@@ -89,9 +84,9 @@ public class EntityGroup extends Entity {
     }
 
     @Override
-    public void translateRepetedWayPosition() {
+    public void translateRepeatedWayPosition() {
         for (Entity entity : mEntities) {
-            entity.translateRepetedWayPosition();
+            entity.translateRepeatedWayPosition();
         }
     }
 

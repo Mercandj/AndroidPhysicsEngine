@@ -23,38 +23,29 @@ public class Camera {
     public boolean left = false;
     public boolean right = false;
 
-    public Vector3D mEye;
-    public Vector3D mForward;
-    public Vector3D mUp;
+    public Vector3D mEye = new Vector3D(0, 2, 2);
+    public Vector3D mForward= new Vector3D(0, 0, -1);
+    public Vector3D mUp= new Vector3D(0, 1, 0);
 
     /**
      * Specifies the field of view angle, in degrees, in the y direction.
      */
-    public float mFovy;
+    public float mFovy = 90;
 
     /**
      * Specifies the distance from the viewer to the near clipping plane (always positive).
      */
-    public float mZNear;
+    public float mZNear = 0.1f;
 
     /**
      * Specifies the distance from the viewer to the far clipping plane (always positive).
      */
-    public float mZFar;
+    public float mZFar = 150;
 
     float vx;
     float vy;
 
     public Camera() {
-    }
-
-    public void init() {
-        mEye = new Vector3D(0, 2, 2);
-        mForward = new Vector3D(0, 0, -1);
-        mUp = new Vector3D(0, 1, 0);
-        mFovy = 90;
-        mZNear = 0.1f;
-        mZFar = 150;
     }
 
     public void look(float[] mVMatrix) {

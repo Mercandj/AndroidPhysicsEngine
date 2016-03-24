@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- * <p/>
+ * <p>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -39,17 +39,18 @@ public class Object3D extends Entity {
 
     private static final String TAG = "Object3D";
 
-    static String vertexShaderCode;
-    static String fragmentShaderCode;
+    private static String sVertexShaderCode;
+    private static String sFragmentShaderCode;
+
     public float[] transformationMatrix = new float[16];
-    public Texture texture, texture_bump;
-    Context context;
-    IFunctionEntity contactFloorListener;
-    boolean insideLastLoop = false;
-    private float[] vertices;
-    private float[] texturecoords;
-    private short[] indices;
-    private float[] normals, tangents;
+    public Texture mTexture;
+    public Texture mTextureBumpMapping;
+    IFunctionEntity mContactFloorListener;
+    boolean mIsInsideLastLoop = false;
+    private float[] mVertices;
+    private float[] mTextureCoordinates;
+    private short[] mIndices;
+    private float[] normals, mTangents;
     private int[] buffers = new int[5];
     private float color[] = {0.8f, 0.409803922f, 0.498039216f, 1.0f};
     private int mProgram;
@@ -62,43 +63,45 @@ public class Object3D extends Entity {
     private int mNMatrixHandle;
     private int mMVMatrixHandle;
 
-    public Object3D(Context context, IFunctionEntity contactFlourListener) {
-        this.context = context;
-        if (vertexShaderCode == null)
-            vertexShaderCode = readShaderFromRawResource(R.raw.shader_vertex);
-        if (fragmentShaderCode == null)
-            fragmentShaderCode = readShaderFromRawResource(R.raw.shader_fragment);
+    public Object3D(final Context context, final IFunctionEntity contactFlourListener) {
+        if (sVertexShaderCode == null) {
+            sVertexShaderCode = readShaderFromRawResource(context, R.raw.shader_vertex);
+        }
+        if (sFragmentShaderCode == null) {
+            sFragmentShaderCode = readShaderFromRawResource(context, R.raw.shader_fragment);
+        }
         Matrix.setIdentityM(transformationMatrix, 0);
-        this.contactFloorListener = contactFlourListener;
+        mContactFloorListener = contactFlourListener;
     }
 
-    public Object3D(Context context) {
-        this.context = context;
-        if (vertexShaderCode == null)
-            vertexShaderCode = readShaderFromRawResource(R.raw.shader_vertex);
-        if (fragmentShaderCode == null)
-            fragmentShaderCode = readShaderFromRawResource(R.raw.shader_fragment);
+    public Object3D(final Context context) {
+        if (sVertexShaderCode == null) {
+            sVertexShaderCode = readShaderFromRawResource(context, R.raw.shader_vertex);
+        }
+        if (sFragmentShaderCode == null) {
+            sFragmentShaderCode = readShaderFromRawResource(context, R.raw.shader_fragment);
+        }
         Matrix.setIdentityM(transformationMatrix, 0);
     }
 
     private Vector3D computeTangent(int v0, int v1, int v2) {
-        float du1 = texturecoords[2 * v1] - texturecoords[2 * v0];
-        float dv1 = texturecoords[2 * v1 + 1] - texturecoords[2 * v0 + 1];
-        float du2 = texturecoords[2 * v2] - texturecoords[2 * v0];
-        float dv2 = texturecoords[2 * v2 + 1] - texturecoords[2 * v0 + 1];
+        float du1 = mTextureCoordinates[2 * v1] - mTextureCoordinates[2 * v0];
+        float dv1 = mTextureCoordinates[2 * v1 + 1] - mTextureCoordinates[2 * v0 + 1];
+        float du2 = mTextureCoordinates[2 * v2] - mTextureCoordinates[2 * v0];
+        float dv2 = mTextureCoordinates[2 * v2 + 1] - mTextureCoordinates[2 * v0 + 1];
 
         float f = 1.0f / (du1 * dv2 - du2 * dv1);
         if ((du1 * dv2 - du2 * dv1) == 0) {
             return new Vector3D(0, 0, 0);
         }
 
-        float e1x = vertices[3 * v1] - vertices[3 * v0];
-        float e1y = vertices[3 * v1 + 1] - vertices[3 * v0 + 1];
-        float e1z = vertices[3 * v1 + 2] - vertices[3 * v0 + 2];
+        float e1x = mVertices[3 * v1] - mVertices[3 * v0];
+        float e1y = mVertices[3 * v1 + 1] - mVertices[3 * v0 + 1];
+        float e1z = mVertices[3 * v1 + 2] - mVertices[3 * v0 + 2];
 
-        float e2x = vertices[3 * v2] - vertices[3 * v0];
-        float e2y = vertices[3 * v2 + 1] - vertices[3 * v0 + 1];
-        float e2z = vertices[3 * v2 + 2] - vertices[3 * v0 + 2];
+        float e2x = mVertices[3 * v2] - mVertices[3 * v0];
+        float e2y = mVertices[3 * v2 + 1] - mVertices[3 * v0 + 1];
+        float e2z = mVertices[3 * v2 + 2] - mVertices[3 * v0 + 2];
 
         return new Vector3D(f * (dv2 * e1x - dv1 * e2x), f * (dv2 * e1y - dv1 * e2y), f * (dv2 * e1z - dv1 * e2z));
     }
@@ -107,37 +110,37 @@ public class Object3D extends Entity {
         int i, j;
         float x1, y1, z1;
 
-        int n = vertices.length / 3;
-        int m = indices.length / 3;
+        int n = mVertices.length / 3;
+        int m = mIndices.length / 3;
 
-        tangents = new float[3 * n];
+        mTangents = new float[3 * n];
         int[] incidences = new int[n];
-        for (i = 0; i < 3 * n; i++) tangents[i] = 0.0f;
+        for (i = 0; i < 3 * n; i++) mTangents[i] = 0.0f;
         for (i = 0; i < n; i++) incidences[i] = 0;
 
         for (j = 0; j < m; j++) {
-            Vector3D v = computeTangent(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2]);
+            Vector3D v = computeTangent(mIndices[3 * j], mIndices[3 * j + 1], mIndices[3 * j + 2]);
             x1 = v.dX;
             y1 = v.dY;
             z1 = v.dZ;
-            tangents[3 * indices[3 * j]] += x1;
-            tangents[3 * indices[3 * j] + 1] += y1;
-            tangents[3 * indices[3 * j] + 2] += z1;
-            tangents[3 * indices[3 * j + 1]] += x1;
-            tangents[3 * indices[3 * j + 1] + 1] += y1;
-            tangents[3 * indices[3 * j + 1] + 2] += z1;
-            tangents[3 * indices[3 * j + 2]] += x1;
-            tangents[3 * indices[3 * j + 2] + 1] += y1;
-            tangents[3 * indices[3 * j + 2] + 2] += z1;
-            incidences[indices[3 * j]]++;
-            incidences[indices[3 * j + 1]]++;
-            incidences[indices[3 * j + 2]]++;
+            mTangents[3 * mIndices[3 * j]] += x1;
+            mTangents[3 * mIndices[3 * j] + 1] += y1;
+            mTangents[3 * mIndices[3 * j] + 2] += z1;
+            mTangents[3 * mIndices[3 * j + 1]] += x1;
+            mTangents[3 * mIndices[3 * j + 1] + 1] += y1;
+            mTangents[3 * mIndices[3 * j + 1] + 2] += z1;
+            mTangents[3 * mIndices[3 * j + 2]] += x1;
+            mTangents[3 * mIndices[3 * j + 2] + 1] += y1;
+            mTangents[3 * mIndices[3 * j + 2] + 2] += z1;
+            incidences[mIndices[3 * j]]++;
+            incidences[mIndices[3 * j + 1]]++;
+            incidences[mIndices[3 * j + 2]]++;
         }
         for (i = 0; i < n; i++) {
-            float l = (float) Math.sqrt(tangents[3 * i] * tangents[3 * i] + tangents[3 * i + 1] * tangents[3 * i + 1] + tangents[3 * i + 2] * tangents[3 * i + 2]);
-            tangents[3 * i] /= l;
-            tangents[3 * i + 1] /= l;
-            tangents[3 * i + 2] /= l;
+            float l = (float) Math.sqrt(mTangents[3 * i] * mTangents[3 * i] + mTangents[3 * i + 1] * mTangents[3 * i + 1] + mTangents[3 * i + 2] * mTangents[3 * i + 2]);
+            mTangents[3 * i] /= l;
+            mTangents[3 * i + 1] /= l;
+            mTangents[3 * i + 2] /= l;
         }
     }
 
@@ -145,18 +148,18 @@ public class Object3D extends Entity {
         GLES30.glGenBuffers(5, buffers, 0);
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, buffers[0]);
-        ByteBuffer bb = ByteBuffer.allocateDirect(vertices.length * 4);
+        ByteBuffer bb = ByteBuffer.allocateDirect(mVertices.length * 4);
         bb.order(ByteOrder.nativeOrder());
         FloatBuffer vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(vertices);
+        vertexBuffer.put(mVertices);
         vertexBuffer.position(0);
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, vertexBuffer.capacity() * 4, vertexBuffer, GLES30.GL_STATIC_DRAW);
 
         GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-        ByteBuffer dlb = ByteBuffer.allocateDirect(indices.length * 2);
+        ByteBuffer dlb = ByteBuffer.allocateDirect(mIndices.length * 2);
         dlb.order(ByteOrder.nativeOrder());
         ShortBuffer indexBuffer = dlb.asShortBuffer();
-        indexBuffer.put(indices);
+        indexBuffer.put(mIndices);
         indexBuffer.position(0);
         GLES30.glBufferData(GLES30.GL_ELEMENT_ARRAY_BUFFER, indexBuffer.capacity() * 2, indexBuffer, GLES30.GL_STATIC_DRAW);
 
@@ -169,27 +172,26 @@ public class Object3D extends Entity {
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, normalBuffer.capacity() * 4, normalBuffer, GLES30.GL_STATIC_DRAW);
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, buffers[3]);
-        bb = ByteBuffer.allocateDirect(texturecoords.length * 4);
+        bb = ByteBuffer.allocateDirect(mTextureCoordinates.length * 4);
         bb.order(ByteOrder.nativeOrder());
         FloatBuffer texturecoordsBuffer = bb.asFloatBuffer();
-        texturecoordsBuffer.put(texturecoords);
+        texturecoordsBuffer.put(mTextureCoordinates);
         texturecoordsBuffer.position(0);
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, texturecoordsBuffer.capacity() * 4, texturecoordsBuffer, GLES30.GL_STATIC_DRAW);
 
-        if (tangents != null) {//TODO
-
+        if (mTangents != null) {//TODO
 
             GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, buffers[4]);
-            bb = ByteBuffer.allocateDirect(tangents.length * 4);
+            bb = ByteBuffer.allocateDirect(mTangents.length * 4);
             bb.order(ByteOrder.nativeOrder());
             FloatBuffer tagentBuffer = bb.asFloatBuffer();
-            tagentBuffer.put(tangents);
+            tagentBuffer.put(mTangents);
             tagentBuffer.position(0);
             GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, tagentBuffer.capacity() * 4, tagentBuffer, GLES30.GL_STATIC_DRAW);
         }
 
-        int vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertexShaderCode);
-        int fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        int vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, sVertexShaderCode);
+        int fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, sFragmentShaderCode);
 
         mProgram = GLES30.glCreateProgram();             // create empty OpenGL Program
         GLES30.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
@@ -223,14 +225,14 @@ public class Object3D extends Entity {
         int mtexMapHandle = GLES30.glGetUniformLocation(mProgram, "texMap");
         GLES30.glUniform1i(mtexMapHandle, 6);
         GLES30.glActiveTexture(GLES30.GL_TEXTURE6);
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture.texName[0]);
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTexture.texName[0]);
 
         mTexturecoordsHandle = GLES30.glGetAttribLocation(mProgram, "vTexturecoords");
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, buffers[3]);
         GLES30.glEnableVertexAttribArray(mTexturecoordsHandle);
         GLES30.glVertexAttribPointer(mTexturecoordsHandle, 2, GLES30.GL_FLOAT, false, 8, 0);
 
-        if (tangents != null) { //TODO
+        if (mTangents != null) { //TODO
             int isBumpMapping = GLES30.glGetUniformLocation(mProgram, "isBumpMapping");
             GLES30.glUniform1i(isBumpMapping, 1);
 
@@ -242,7 +244,7 @@ public class Object3D extends Entity {
             int mtexMapHandle_bump = GLES30.glGetUniformLocation(mProgram, "texMap_bump");
             GLES30.glUniform1i(mtexMapHandle_bump, 7);
             GLES30.glActiveTexture(GLES30.GL_TEXTURE7);
-            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texture_bump.texName[0]);
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureBumpMapping.texName[0]);
         }
 
         mColorHandle = GLES30.glGetUniformLocation(mProgram, "vColor");
@@ -263,16 +265,16 @@ public class Object3D extends Entity {
         GLES30.glUniformMatrix4fv(mNMatrixHandle, 1, false, mNMatrix, 0);
 
         GLES30.glBindBuffer(GLES30.GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-        GLES30.glDrawElements(GLES30.GL_TRIANGLES, indices.length, GLES30.GL_UNSIGNED_SHORT, 0);
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndices.length, GLES30.GL_UNSIGNED_SHORT, 0);
     }
 
     void computeNormal(int v1, int v2, int v3, float[] output) {
-        double dx1 = vertices[v2 * 3] - vertices[v1 * 3];
-        double dx2 = vertices[v3 * 3] - vertices[v2 * 3];
-        double dy1 = vertices[v2 * 3 + 1] - vertices[v1 * 3 + 1];
-        double dy2 = vertices[v3 * 3 + 1] - vertices[v2 * 3 + 1];
-        double dz1 = vertices[v2 * 3 + 2] - vertices[v1 * 3 + 2];
-        double dz2 = vertices[v3 * 3 + 2] - vertices[v2 * 3 + 2];
+        double dx1 = mVertices[v2 * 3] - mVertices[v1 * 3];
+        double dx2 = mVertices[v3 * 3] - mVertices[v2 * 3];
+        double dy1 = mVertices[v2 * 3 + 1] - mVertices[v1 * 3 + 1];
+        double dy2 = mVertices[v3 * 3 + 1] - mVertices[v2 * 3 + 1];
+        double dz1 = mVertices[v2 * 3 + 2] - mVertices[v1 * 3 + 2];
+        double dz2 = mVertices[v3 * 3 + 2] - mVertices[v2 * 3 + 2];
 
         output[0] = (float) (dy1 * dz2 - dz1 * dy2);
         output[1] = (float) (dz1 * dx2 - dx1 * dz2);
@@ -295,8 +297,8 @@ public class Object3D extends Entity {
         float[] tmp = new float[3];
         float length;
 
-        int n = vertices.length / 3;
-        int m = indices.length / 3;
+        int n = mVertices.length / 3;
+        int m = mIndices.length / 3;
 
         normals = new float[3 * n];
         int[] incidences = new int[n];
@@ -304,23 +306,24 @@ public class Object3D extends Entity {
         for (i = 0; i < n; i++) incidences[i] = 0;
 
         for (j = 0; j < m; j++) {
-            computeNormal(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2], tmp);
-            normals[3 * indices[3 * j]] += tmp[0];
-            normals[3 * indices[3 * j] + 1] += tmp[1];
-            normals[3 * indices[3 * j] + 2] += tmp[2];
-            normals[3 * indices[3 * j + 1]] += tmp[0];
-            normals[3 * indices[3 * j + 1] + 1] += tmp[1];
-            normals[3 * indices[3 * j + 1] + 2] += tmp[2];
-            normals[3 * indices[3 * j + 2]] += tmp[0];
-            normals[3 * indices[3 * j + 2] + 1] += tmp[1];
-            normals[3 * indices[3 * j + 2] + 2] += tmp[2];
-            incidences[indices[3 * j]]++;
-            incidences[indices[3 * j + 1]]++;
-            incidences[indices[3 * j + 2]]++;
+            computeNormal(mIndices[3 * j], mIndices[3 * j + 1], mIndices[3 * j + 2], tmp);
+            normals[3 * mIndices[3 * j]] += tmp[0];
+            normals[3 * mIndices[3 * j] + 1] += tmp[1];
+            normals[3 * mIndices[3 * j] + 2] += tmp[2];
+            normals[3 * mIndices[3 * j + 1]] += tmp[0];
+            normals[3 * mIndices[3 * j + 1] + 1] += tmp[1];
+            normals[3 * mIndices[3 * j + 1] + 2] += tmp[2];
+            normals[3 * mIndices[3 * j + 2]] += tmp[0];
+            normals[3 * mIndices[3 * j + 2] + 1] += tmp[1];
+            normals[3 * mIndices[3 * j + 2] + 2] += tmp[2];
+            incidences[mIndices[3 * j]]++;
+            incidences[mIndices[3 * j + 1]]++;
+            incidences[mIndices[3 * j + 2]]++;
         }
         for (i = 0; i < n; i++) {
-            if (incidences[i] != 0)
+            if (incidences[i] != 0) {
                 normals[3 * i] /= incidences[i];
+            }
             normals[3 * i + 1] /= incidences[i];
             normals[3 * i + 2] /= incidences[i];
 
@@ -332,31 +335,37 @@ public class Object3D extends Entity {
     }
 
     public void readMeshLocal(final IndicesVertices indicesVertices) {
-        this.vertices = indicesVertices.vertices;
-        this.indices = indicesVertices.indices;
-        this.mEdgePositionMin = indicesVertices.edgeVerticeMin;
-        this.mEdgeVectorPositionMax = indicesVertices.edgeVerticeMax;
+        mVertices = indicesVertices.vertices;
+        mIndices = indicesVertices.indices;
+        mEdgePositionMin = indicesVertices.edgeVerticeMin;
+        mEdgeVectorPositionMax = indicesVertices.edgeVerticeMax;
     }
 
     public void computeSphereTexture() {
-        int n = vertices.length / 3;
-        texturecoords = new float[3 * n];
+        int n = mVertices.length / 3;
+        mTextureCoordinates = new float[3 * n];
         double x, y, z;
         for (int i = 0; i < n; i++) {
-            x = vertices[3 * i];
-            y = vertices[3 * i + 1];
-            z = vertices[3 * i + 2];
+            x = mVertices[3 * i];
+            y = mVertices[3 * i + 1];
+            z = mVertices[3 * i + 2];
             if (x == 0 && y == 0 && z == 0) continue;
             double l = Math.sqrt(x * x + y * y + z * z);
             x = x / l;
             y = y / l;
             z = z / l;
 
-            if (-z >= 0.0) texturecoords[2 * i] = (float) (Math.atan2(-z, x) / (2 * Math.PI));
-            else texturecoords[2 * i] = (float) ((2 * Math.PI + Math.atan2(-z, x)) / (2 * Math.PI));
+            if (-z >= 0.0) {
+                mTextureCoordinates[2 * i] = (float) (Math.atan2(-z, x) / (2 * Math.PI));
+            } else {
+                mTextureCoordinates[2 * i] = (float) ((2 * Math.PI + Math.atan2(-z, x)) / (2 * Math.PI));
+            }
 
-            if (y >= 0.0) texturecoords[2 * i + 1] = (float) (Math.acos(y) / Math.PI);
-            else texturecoords[2 * i + 1] = (float) ((Math.PI - Math.acos(-y)) / Math.PI);
+            if (y >= 0.0) {
+                mTextureCoordinates[2 * i + 1] = (float) (Math.acos(y) / Math.PI);
+            } else {
+                mTextureCoordinates[2 * i + 1] = (float) ((Math.PI - Math.acos(-y)) / Math.PI);
+            }
         }
     }
 
@@ -366,50 +375,50 @@ public class Object3D extends Entity {
 
         int n = (num + 1) * (num + 1);
         int m = num * num * 2;
-        vertices = new float[3 * n];
-        indices = new short[3 * m];
-        texturecoords = new float[2 * n];
+        mVertices = new float[3 * n];
+        mIndices = new short[3 * m];
+        mTextureCoordinates = new float[2 * n];
 
-        this.mEdgePositionMin = new Vector3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-        this.mEdgeVectorPositionMax = new Vector3D(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+        mEdgePositionMin = new Vector3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+        mEdgeVectorPositionMax = new Vector3D(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
 
         k = 0;
         for (i = 0; i <= num; i++) {
             for (j = 0; j <= num; j++) {
-                vertices[3 * ((num + 1) * i + j)] = (float) s * i / (float) num - s / 2;
-                vertices[3 * ((num + 1) * i + j) + 1] = (float) s * j / (float) num - s / 2;
-                vertices[3 * ((num + 1) * i + j) + 2] = (float) 0.0;
+                mVertices[3 * ((num + 1) * i + j)] = (float) s * i / (float) num - s / 2;
+                mVertices[3 * ((num + 1) * i + j) + 1] = (float) s * j / (float) num - s / 2;
+                mVertices[3 * ((num + 1) * i + j) + 2] = (float) 0.0;
 
-                if (vertices[3 * ((num + 1) * i + j)] < mEdgePositionMin.dX)
-                    mEdgePositionMin.dX = vertices[3 * ((num + 1) * i + j)];
-                else if (vertices[3 * ((num + 1) * i + j)] > mEdgePositionMin.dX)
-                    mEdgeVectorPositionMax.dX = vertices[3 * ((num + 1) * i + j)];
+                if (mVertices[3 * ((num + 1) * i + j)] < mEdgePositionMin.dX)
+                    mEdgePositionMin.dX = mVertices[3 * ((num + 1) * i + j)];
+                else if (mVertices[3 * ((num + 1) * i + j)] > mEdgePositionMin.dX)
+                    mEdgeVectorPositionMax.dX = mVertices[3 * ((num + 1) * i + j)];
 
-                if (vertices[3 * ((num + 1) * i + j) + 1] < mEdgePositionMin.dY)
-                    mEdgePositionMin.dY = vertices[3 * ((num + 1) * i + j) + 1];
-                else if (vertices[3 * ((num + 1) * i + j) + 1] > mEdgePositionMin.dY)
-                    mEdgeVectorPositionMax.dY = vertices[3 * ((num + 1) * i + j) + 1];
+                if (mVertices[3 * ((num + 1) * i + j) + 1] < mEdgePositionMin.dY)
+                    mEdgePositionMin.dY = mVertices[3 * ((num + 1) * i + j) + 1];
+                else if (mVertices[3 * ((num + 1) * i + j) + 1] > mEdgePositionMin.dY)
+                    mEdgeVectorPositionMax.dY = mVertices[3 * ((num + 1) * i + j) + 1];
 
-                if (vertices[3 * ((num + 1) * i + j) + 2] < mEdgePositionMin.dZ)
-                    mEdgePositionMin.dZ = vertices[3 * ((num + 1) * i + j) + 2];
-                else if (vertices[3 * ((num + 1) * i + j) + 2] > mEdgePositionMin.dZ)
-                    mEdgeVectorPositionMax.dZ = vertices[3 * ((num + 1) * i + j) + 2];
+                if (mVertices[3 * ((num + 1) * i + j) + 2] < mEdgePositionMin.dZ)
+                    mEdgePositionMin.dZ = mVertices[3 * ((num + 1) * i + j) + 2];
+                else if (mVertices[3 * ((num + 1) * i + j) + 2] > mEdgePositionMin.dZ)
+                    mEdgeVectorPositionMax.dZ = mVertices[3 * ((num + 1) * i + j) + 2];
 
-                texturecoords[2 * ((num + 1) * i + j)] = (float) i / (float) (num + 1);
-                texturecoords[2 * ((num + 1) * i + j) + 1] = (float) j / (float) (num + 1);
+                mTextureCoordinates[2 * ((num + 1) * i + j)] = (float) i / (float) (num + 1);
+                mTextureCoordinates[2 * ((num + 1) * i + j) + 1] = (float) j / (float) (num + 1);
             }
         }
 
         k = 0;
         for (i = 0; i < num; i++) {
             for (j = 0; j < num; j++) {
-                indices[k++] = (short) ((num + 1) * i + j);
-                indices[k++] = (short) ((num + 1) * (i + 1) + j);
-                indices[k++] = (short) ((num + 1) * (i) + j + 1);
+                mIndices[k++] = (short) ((num + 1) * i + j);
+                mIndices[k++] = (short) ((num + 1) * (i + 1) + j);
+                mIndices[k++] = (short) ((num + 1) * (i) + j + 1);
 
-                indices[k++] = (short) ((num + 1) * (i + 1) + j);
-                indices[k++] = (short) ((num + 1) * (i + 1) + j + 1);
-                indices[k++] = (short) ((num + 1) * (i) + j + 1);
+                mIndices[k++] = (short) ((num + 1) * (i + 1) + j);
+                mIndices[k++] = (short) ((num + 1) * (i + 1) + j + 1);
+                mIndices[k++] = (short) ((num + 1) * (i) + j + 1);
             }
         }
     }
@@ -419,15 +428,16 @@ public class Object3D extends Entity {
     }
 
     public void computePlaneTexture() {
-        int n = vertices.length / 3;
-        texturecoords = new float[2 * n];
+        int n = mVertices.length / 3;
+        mTextureCoordinates = new float[2 * n];
         int num = (int) Math.sqrt((float) n);
 
-        for (int i = 0; i < num; i++)
+        for (int i = 0; i < num; i++) {
             for (int j = 0; j < num; j++) {
-                texturecoords[2 * (i * num + j)] = (float) i / num;
-                texturecoords[2 * (i * num + j) + 1] = (float) (1.0 - (float) j / num);
+                mTextureCoordinates[2 * (i * num + j)] = (float) i / num;
+                mTextureCoordinates[2 * (i * num + j) + 1] = (float) (1.0 - (float) j / num);
             }
+        }
     }
 
     public int loadShader(int type, String shaderCode) {
@@ -449,7 +459,7 @@ public class Object3D extends Entity {
         return shader;
     }
 
-    public String readShaderFromRawResource(final int resourceId) {
+    public String readShaderFromRawResource(final Context context, final int resourceId) {
         final InputStream inputStream = context.getResources().openRawResource(resourceId);
         final InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         final BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -498,17 +508,17 @@ public class Object3D extends Entity {
         if (a == -90 && x == 1 && y == 0 && z == 0) {
             float tmpMin = -this.mEdgePositionMin.dY;
             float tmpMax = -this.mEdgeVectorPositionMax.dY;
-            this.mEdgePositionMin.dY = this.mEdgePositionMin.dZ;
-            this.mEdgeVectorPositionMax.dY = this.mEdgeVectorPositionMax.dZ;
-            this.mEdgePositionMin.dZ = tmpMin;
-            this.mEdgeVectorPositionMax.dZ = tmpMax;
+            mEdgePositionMin.dY = mEdgePositionMin.dZ;
+            mEdgeVectorPositionMax.dY = mEdgeVectorPositionMax.dZ;
+            mEdgePositionMin.dZ = tmpMin;
+            mEdgeVectorPositionMax.dZ = tmpMax;
         }
     }
 
     @Override
     public void scale(float rate) {
-        for (int i = 0; i < vertices.length; i++) {
-            vertices[i] *= rate;
+        for (int i = 0; i < mVertices.length; i++) {
+            mVertices[i] *= rate;
         }
 
         mEdgePositionMin.dX = (mEdgePositionMin.dX - (mEdgeVectorPositionMax.dX + mEdgePositionMin.dX) / 2) * rate;
@@ -558,11 +568,11 @@ public class Object3D extends Entity {
     }
 
     @Override
-    public void translateRepetedWayPosition() {
+    public void translateRepeatedWayPosition() {
         if (repetedWayPosition != null) {
             Vector3D tmp;
             if ((tmp = repetedWayPosition.getCurrentPosition()) != null) {
-                translate(tmp.dX - this.mPosition.dX, tmp.dY - this.mPosition.dY, tmp.dZ - this.mPosition.dZ);
+                translate(tmp.dX - mPosition.dX, tmp.dY - mPosition.dY, tmp.dZ - mPosition.dZ);
             }
         }
     }
@@ -595,11 +605,11 @@ public class Object3D extends Entity {
                 final boolean isInside = isInside(contacts);
 
                 if ((mPosition.dY <= 0.0f + Math.abs(mEdgePositionMin.dY)) && mVelocity.dY < 0) { // Cheat Contact with floor : contact force
-                    if (contactFloorListener != null && contactFloorListener.condition(this)) {
-                        contactFloorListener.execute(this);
+                    if (mContactFloorListener != null && mContactFloorListener.condition(this)) {
+                        mContactFloorListener.execute(this);
                     }
                     mVelocity.dY = -mVelocity.dY * 0.65f;
-                } else if (insideLastLoop && isInside) {
+                } else if (mIsInsideLastLoop && isInside) {
                     // Spring force : thanks teacher idea
                     if (entitiesContact != null) {
                         for (Entity entityContact : entitiesContact) {
@@ -616,25 +626,36 @@ public class Object3D extends Entity {
                             }
                         }
                     }
-                } else if ((isInside) && this.mVelocity.dY < 0) { // Contact with object
-                    insideLastLoop = true;
+                } else if (isInside) {
+                    mIsInsideLastLoop = true;
+                    mVelocity.dX = -mVelocity.dX * 0.65f;
+                    mVelocity.dY = -mVelocity.dY * 0.65f;
+                    mVelocity.dZ = -mVelocity.dZ * 0.65f;
+                }
+
+                /*
+                else if ((isInside) && this.mVelocity.dY < 0) { // Contact with object
+                    mIsInsideLastLoop = true;
                     mVelocity.dY = -mVelocity.dY * 0.65f; // Cheat
 
-                    //this.mVelocity.dY = entityContact.mVelocity.dY * 1.0f; // Cheat
-                    /*
-                    this.mVelocity.dY = 0;
-					for(Entity ent : entitiesContact)
-						this.mVelocity.dY += ent.mVelocity.dY*ent.mVelocity.dY ;
-					*/
+                    //mVelocity.dY = entityContact.mVelocity.dY * 1.0f; // Cheat
+
+                    //mVelocity.dY = 0;
+					//for(Entity ent : entitiesContact)
+					//	mVelocity.dY += ent.mVelocity.dY*ent.mVelocity.dY ;
+
                     //this.mVelocity.dY = (float) Math.sqrt(this.mVelocity.dY);
 
-                    //this.mVelocity.dY = (entityContact.mPhysic.mass/this.mPhysic.mass) * entityContact.mVelocity.dY * 1.0f; // Best equation
+                    //this.mVelocity.dY = (entityContact.mPhysic.mass/mPhysic.mass) * entityContact.mVelocity.dY * 1.0f; // Best equation
                 } else if (isInside) {
-                    insideLastLoop = true;
-                    this.mVelocity.dX = -this.mVelocity.dX * 0.65f;
-                    this.mVelocity.dZ = -this.mVelocity.dZ * 0.65f;
-                } else if (!isInside) {
-                    insideLastLoop = false;
+                    mIsInsideLastLoop = true;
+                    mVelocity.dX = -mVelocity.dX * 0.65f;
+                    mVelocity.dZ = -mVelocity.dZ * 0.65f;
+                }
+                */
+
+                else if (!isInside) {
+                    mIsInsideLastLoop = false;
                 }
             }
         }

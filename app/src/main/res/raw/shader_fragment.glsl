@@ -37,10 +37,10 @@ void main() {
 	float diffuse = max( dot(lightdir, normal), 0.0); // smooth light
 	float specular = pow(max( dot(reflectdir,eyedir), 0.0), 50.0); // look shiny
 
-	// Fake the texture to add 3d effects.
+	// Fake the mTexture to add 3d effects.
 	if(isBumpMapping == 1) {
 
-		// # In your fragment shader, compute the matrix to transform the light direction, and the eye direction from the world space to tangent space.		
+		// # In your fragment shader, compute the matrix to transform the light direction, and the eye direction from the mWorld space to tangent space.
 		vec3 n = normalize (vec3(uNMatrix * vec4(mynormal, 0)));
 		vec3 t = normalize (vec3(uNMatrix * vec4(mytangent, 0)));
 		vec3 b = normalize (cross(n,t));		
@@ -54,7 +54,7 @@ void main() {
 		lightdir = out_m * lightdir;
 		eyedir = out_m * eyedir;
 	
-		// # In your fragment shader, then read the perturbed normals from the normal texture map, and the diffuse coefficients from the diffuse texture map.
+		// # In your fragment shader, then read the perturbed normals from the normal mTexture map, and the diffuse coefficients from the diffuse mTexture map.
 		normal = normalize (2.0 * texture2D(texMap_bump, mytexturecoords).rgb - 1.0);
 		diffuse = max( dot(lightdir, normal), 0.0);
 		

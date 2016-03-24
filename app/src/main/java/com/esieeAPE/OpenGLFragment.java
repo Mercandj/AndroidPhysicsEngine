@@ -104,9 +104,9 @@ public class OpenGLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.forward = false;
+                    mGLView.mRenderer.mCamera.forward = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.forward = true;
+                    mGLView.mRenderer.mCamera.forward = true;
                 }
                 return false;
             }
@@ -118,9 +118,9 @@ public class OpenGLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.back = false;
+                    mGLView.mRenderer.mCamera.back = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.back = true;
+                    mGLView.mRenderer.mCamera.back = true;
                 }
                 return false;
             }
@@ -132,9 +132,9 @@ public class OpenGLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.left = false;
+                    mGLView.mRenderer.mCamera.left = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.left = true;
+                    mGLView.mRenderer.mCamera.left = true;
                 }
                 return false;
             }
@@ -146,9 +146,9 @@ public class OpenGLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.right = false;
+                    mGLView.mRenderer.mCamera.right = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.right = true;
+                    mGLView.mRenderer.mCamera.right = true;
                 }
                 return false;
             }
@@ -179,7 +179,7 @@ public class OpenGLFragment extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //Log.v("mysensors: ", Float.toString(event.values[0]) +","+ Float.toString(event.values[1]) +","+ Float.toString(event.values[2]));
         //((MyGLSurfaceView)mGLView).mRenderer.myobj.color[0]= lux;
-        if ((((OpenGLSurfaceView) mGLView).mRenderer).camera.mEye != null) {
+        if ((((OpenGLSurfaceView) mGLView).mRenderer).mCamera.mEye != null) {
             /*(((MyGLSurfaceView)mGLView).mRenderer.mEye.dX) += (event.values[0]/1000.0);
             (((MyGLSurfaceView)mGLView).mRenderer.mEye.dY) += (event.values[1]/1000.0);
 			(((MyGLSurfaceView)mGLView).mRenderer.mEye.dZ) += (event.values[2]/1000.0);*/
