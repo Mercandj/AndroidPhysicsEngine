@@ -50,10 +50,10 @@ public class OpenGLSurfaceView extends GLSurfaceView implements SensorEventListe
     public OpenGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        // Create an OpenGL ES 2.0 mContext.
+        // Create an OpenGL ES 2.0-compatible context.
         setEGLContextClientVersion(2);
 
-        // Set the Renderer for drawing on the OpenGLSurfaceView
+        // Set a custom the GLSurfaceView.Renderer for drawing on this GLSurfaceView
         mRenderer = new OpenGLRenderer(context, this);
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
