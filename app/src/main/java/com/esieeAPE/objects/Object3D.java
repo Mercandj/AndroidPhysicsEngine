@@ -50,7 +50,7 @@ public class Object3D extends Entity {
     private float[] mVertices;
     private float[] mTextureCoordinates;
     private short[] mIndices;
-    private float[] normals, mTangents;
+    private float[] mNormals, mTangents;
     private int[] buffers = new int[5];
     private float color[] = {0.8f, 0.409803922f, 0.498039216f, 1.0f};
     private int mProgram;
@@ -164,10 +164,10 @@ public class Object3D extends Entity {
         GLES30.glBufferData(GLES30.GL_ELEMENT_ARRAY_BUFFER, indexBuffer.capacity() * 2, indexBuffer, GLES30.GL_STATIC_DRAW);
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, buffers[2]);
-        bb = ByteBuffer.allocateDirect(normals.length * 4);
+        bb = ByteBuffer.allocateDirect(mNormals.length * 4);
         bb.order(ByteOrder.nativeOrder());
         FloatBuffer normalBuffer = bb.asFloatBuffer();
-        normalBuffer.put(normals);
+        normalBuffer.put(mNormals);
         normalBuffer.position(0);
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, normalBuffer.capacity() * 4, normalBuffer, GLES30.GL_STATIC_DRAW);
 
@@ -300,37 +300,37 @@ public class Object3D extends Entity {
         int n = mVertices.length / 3;
         int m = mIndices.length / 3;
 
-        normals = new float[3 * n];
+        mNormals = new float[3 * n];
         int[] incidences = new int[n];
-        for (i = 0; i < 3 * n; i++) normals[i] = 0.0f;
+        for (i = 0; i < 3 * n; i++) mNormals[i] = 0.0f;
         for (i = 0; i < n; i++) incidences[i] = 0;
 
         for (j = 0; j < m; j++) {
             computeNormal(mIndices[3 * j], mIndices[3 * j + 1], mIndices[3 * j + 2], tmp);
-            normals[3 * mIndices[3 * j]] += tmp[0];
-            normals[3 * mIndices[3 * j] + 1] += tmp[1];
-            normals[3 * mIndices[3 * j] + 2] += tmp[2];
-            normals[3 * mIndices[3 * j + 1]] += tmp[0];
-            normals[3 * mIndices[3 * j + 1] + 1] += tmp[1];
-            normals[3 * mIndices[3 * j + 1] + 2] += tmp[2];
-            normals[3 * mIndices[3 * j + 2]] += tmp[0];
-            normals[3 * mIndices[3 * j + 2] + 1] += tmp[1];
-            normals[3 * mIndices[3 * j + 2] + 2] += tmp[2];
+            mNormals[3 * mIndices[3 * j]] += tmp[0];
+            mNormals[3 * mIndices[3 * j] + 1] += tmp[1];
+            mNormals[3 * mIndices[3 * j] + 2] += tmp[2];
+            mNormals[3 * mIndices[3 * j + 1]] += tmp[0];
+            mNormals[3 * mIndices[3 * j + 1] + 1] += tmp[1];
+            mNormals[3 * mIndices[3 * j + 1] + 2] += tmp[2];
+            mNormals[3 * mIndices[3 * j + 2]] += tmp[0];
+            mNormals[3 * mIndices[3 * j + 2] + 1] += tmp[1];
+            mNormals[3 * mIndices[3 * j + 2] + 2] += tmp[2];
             incidences[mIndices[3 * j]]++;
             incidences[mIndices[3 * j + 1]]++;
             incidences[mIndices[3 * j + 2]]++;
         }
         for (i = 0; i < n; i++) {
             if (incidences[i] != 0) {
-                normals[3 * i] /= incidences[i];
+                mNormals[3 * i] /= incidences[i];
             }
-            normals[3 * i + 1] /= incidences[i];
-            normals[3 * i + 2] /= incidences[i];
+            mNormals[3 * i + 1] /= incidences[i];
+            mNormals[3 * i + 2] /= incidences[i];
 
-            length = (float) Math.sqrt(normals[3 * i] * normals[3 * i] + normals[3 * i + 1] * normals[3 * i + 1] + normals[3 * i + 2] * normals[3 * i + 2]);
-            normals[3 * i] /= length;
-            normals[3 * i + 1] /= length;
-            normals[3 * i + 2] /= length;
+            length = (float) Math.sqrt(mNormals[3 * i] * mNormals[3 * i] + mNormals[3 * i + 1] * mNormals[3 * i + 1] + mNormals[3 * i + 2] * mNormals[3 * i + 2]);
+            mNormals[3 * i] /= length;
+            mNormals[3 * i + 1] /= length;
+            mNormals[3 * i + 2] /= length;
         }
     }
 
